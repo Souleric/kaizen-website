@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kaizen Autocare | Premium Car Service</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="#" class="logo"><img src="/logo.png" alt="Kaizen Auto Care" class="logo-img" /></a>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#team">Team</a></li>
+            </ul>
+            <div class="nav-contact">
+                <span>Call Us Now</span>
+                <strong>+1 800 123 4567</strong>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero" id="home">
+        <img id="motion-car" src="/car.png" alt="Motion Car" />
+        <div class="hero-overlay"></div>
+        <div class="container hero-content">
+            <h1>Expert Car Repair<br/>& Maintenance</h1>
+            <p>Premium auto care services designed for the perfectionist.</p>
+            <div class="hero-buttons">
+                <a href="#services" class="btn btn-primary">Services</a>
+                <a href="#client-portal" class="btn btn-secondary">Client Portal</a>
+            </div>
+        </div>
+        
+        <!-- Feature Cards inside Hero (overlapping) -->
+        <div class="container hero-features">
+            <div class="feature-card">
+                <div class="icon-circle">🚗</div>
+                <h3>Engine Diagnostics</h3>
+                <p>Advanced scanning to find issues quickly.</p>
+            </div>
+            <div class="feature-card active">
+                <div class="icon-circle">✨</div>
+                <h3>Routine Maintenance</h3>
+                <p>Oil changes, fluid top-ups, and tune-ups.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon-circle">🔧</div>
+                <h3>Modern Equipment</h3>
+                <p>State-of-the-art tools for every job.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon-circle">🛡️</div>
+                <h3>Safety Materials</h3>
+                <p>Eco-friendly and paint-safe products.</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- About Section -->
+    <section class="about section" id="about">
+        <div class="container about-grid">
+            <div class="about-image">
+                <img src="/hero.png" alt="Car Washing" />
+                <div class="experience-badge">
+                    <strong>10</strong>
+                    <span>Years of<br>Experience</span>
+                </div>
+            </div>
+            <div class="about-text">
+                <h4 class="section-subtitle">USED MODERN EQUIPMENT</h4>
+                <h2 class="section-title">Professional Engine Tuning and Maintenance</h2>
+                <p>We completely reinvent worldwide testing procedures with cooperative initiatives. Leverage existing excellent best practices with functional information.</p>
+                <ul class="about-list">
+                    <li>Certified Technicians</li>
+                    <li>State-of-the-Art Diagnostic Tools</li>
+                    <li>100% Satisfaction Guarantee</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services bg-dark" id="services">
+        <div class="container">
+        <video id="services-video" muted playsinline preload="auto">
+            <source src="/hero-video-48fps.mp4" type="video/mp4">
+        </video>
+        <!-- Service cards below video -->
+        <div class="container services-cards-wrap">
+            <div class="services-grid">
+                <div class="service-card">
+                    <img src="/services.png" alt="Repair" />
+                    <div class="service-info">
+                        <h3>Repair</h3>
+                        <p>Comprehensive engine and mechanical repairs using OEM parts.</p>
+                        <a href="#" class="read-more">Read More →</a>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <img src="/hero.png" alt="Service" />
+                    <div class="service-info">
+                        <h3>Service</h3>
+                        <p>Routine maintenance, oil changes, and fluid top-ups to keep you running.</p>
+                        <a href="#" class="read-more">Read More →</a>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <img src="/services.png" alt="Tire" />
+                    <div class="service-info">
+                        <h3>Tire</h3>
+                        <p>Wheel alignment, rotation, and high-performance tire replacement.</p>
+                        <a href="#" class="read-more">Read More →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="team section" id="team">
+        <div class="container">
+            <div class="section-header center">
+                <h4 class="section-subtitle">OUR TECHNICIANS</h4>
+                <h2 class="section-title">Meet Our Technicians</h2>
+            </div>
+            <div class="team-grid">
+                <div class="team-card">
+                    <img src="/team.png" alt="Technician" />
+                    <div class="team-info">
+                        <h3>Eng David Alexon</h3>
+                        <p>Senior Mechanic</p>
+                    </div>
+                </div>
+                <div class="team-card">
+                    <img src="/team.png" alt="Technician" />
+                    <div class="team-info">
+                        <h3>James Ramirez</h3>
+                        <p>Lead Engineer</p>
+                    </div>
+                </div>
+                <div class="team-card">
+                    <img src="/team.png" alt="Technician" />
+                    <div class="team-info">
+                        <h3>Justin Goldman</h3>
+                        <p>Tire Specialist</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Kaizen Autocare. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script type="module" src="./main.js"></script>
+</body>
+</html>
