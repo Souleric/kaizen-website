@@ -16,7 +16,48 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 2. Service Cards Scroll Animation
+  // 2. Years counter — count up on enter, reset on scroll back above
+  const yearsCount = document.getElementById('years-count');
+  if (yearsCount) {
+    const target = 10;
+    const duration = 1200; // ms
+    let rafId = null;
+
+    const countUp = () => {
+      const start = performance.now();
+      const tick = (now) => {
+        const progress = Math.min((now - start) / duration, 1);
+        // ease-out cubic
+        const eased = 1 - Math.pow(1 - progress, 3);
+        yearsCount.textContent = Math.round(eased * target);
+        if (progress < 1) rafId = requestAnimationFrame(tick);
+      };
+      rafId = requestAnimationFrame(tick);
+    };
+
+    const resetCount = () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      yearsCount.textContent = '0';
+    };
+
+    const counterObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          countUp();
+        } else {
+          const rect = entry.boundingClientRect;
+          if (rect.top > 0) {
+            // scrolled back up above the section — reset
+            resetCount();
+          }
+        }
+      });
+    }, { threshold: 0.5 });
+
+    counterObserver.observe(yearsCount);
+  }
+
+  // 3. Service Cards Scroll Animation
   const serviceCards = document.querySelectorAll('.service-card');
   if (serviceCards.length) {
     const cardObserver = new IntersectionObserver((entries) => {
