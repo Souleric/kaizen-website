@@ -486,6 +486,10 @@ img {
 }
 
 @media (max-width: 768px) {
+  #services-video {
+    display: none;
+  }
+
   .hero {
     height: 100vh;
     height: 100svh;
