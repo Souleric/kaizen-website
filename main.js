@@ -95,18 +95,26 @@ document.addEventListener('DOMContentLoaded', () => {
     observer.observe(video);
   }
 
-  // 4. Hero mobile video — play once on enter, hold last frame; replay on scroll back
+  // 4. Hero mobile video — play once, hold last frame; replay when hero scrolls back into view
   const heroVideo = document.getElementById('hero-mobile-video');
 
   if (heroVideo) {
+    let heroPlayed = false;
+
+    // Freeze on last frame instead of resetting to black
+    heroVideo.addEventListener('ended', () => {
+      heroVideo.currentTime = heroVideo.duration;
+      heroPlayed = true;
+    });
+
     const heroObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          // Hero is visible — replay from start
+        if (entry.isIntersecting && heroPlayed) {
+          // Scrolled back — replay from start
           heroVideo.currentTime = 0;
+          heroPlayed = false;
           heroVideo.play();
         }
-        // When scrolled away, video has already stopped at last frame (no loop)
       });
     }, { threshold: 0.3 });
 
