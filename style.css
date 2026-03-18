@@ -553,4 +553,18 @@ img {
   .nav-contact {
     display: none;
   }
+
+  /* Thinner navbar on mobile */
+  .navbar {
+    padding: 8px 0;
+  }
+
+  .logo-img {
+    height: 40px;
+  }
+
+  /* Match hero padding-top to new navbar height */
+  .hero {
+    padding-top: 56px;
+  }
 }
