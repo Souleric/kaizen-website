@@ -474,29 +474,49 @@ img {
 
 @media (max-width: 768px) {
   .hero {
-    min-height: 100vh;
-    min-height: 100svh;
+    height: 100vh;
+    height: 100svh;
+    min-height: unset;
     padding-top: 0;
     padding-bottom: 0;
-    justify-content: center;
+    justify-content: flex-end;
+  }
+
+  .hero-overlay {
+    background: linear-gradient(
+      to top,
+      rgba(0,0,0,0.85) 0%,
+      rgba(0,0,0,0.3) 50%,
+      rgba(0,0,0,0.15) 100%
+    );
+  }
+
+  #motion-car {
+    top: 0;
+    left: 50%;
+    right: auto;
+    bottom: 0;
+    transform: translateX(-40%);
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    object-position: center center;
   }
 
   .hero-content {
     transform: none;
-    padding: 100px 0 60px;
+    padding: 0 0 56px;
+    max-width: 100%;
+    text-align: center;
   }
 
   .hero h1 {
-    font-size: clamp(2rem, 10vw, 3rem);
+    font-size: clamp(2rem, 9vw, 2.8rem);
     line-height: 1.15;
   }
 
-  #motion-car {
-    height: 50vh;
-    right: -60px;
-    top: auto;
-    bottom: 0;
-    transform: none;
+  .hero-buttons {
+    justify-content: center;
   }
 
   .nav-contact {
