@@ -488,12 +488,15 @@ img {
     display: none;
   }
 
-  /* Hero: flex column, full screen — video on top, text below */
+  /* Hero: flex column — navbar space, then video, then text */
   .hero {
-    height: 100vh;
-    height: 100svh;
-    min-height: unset;
-    padding: 0;
+    height: auto;
+    min-height: 100vh;
+    min-height: 100svh;
+    padding-top: 68px; /* push below fixed navbar */
+    padding-bottom: 0;
+    padding-left: 0;
+    padding-right: 0;
     flex-direction: column;
     justify-content: flex-start;
   }
@@ -507,31 +510,30 @@ img {
     display: none;
   }
 
-  /* Text area: top of hero, below navbar */
-  .hero-content {
+  /* Video: sits between navbar and title — full width, no crop */
+  #hero-mobile-video {
     order: 1;
+    display: block;
+    position: static;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
+
+  /* Text area: below video */
+  .hero-content {
+    order: 2;
     flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
     transform: none;
-    padding: 80px 24px 24px;
+    padding: 32px 24px 36px;
     max-width: 100%;
     text-align: center;
     background: var(--darker-bg);
     width: 100%;
-  }
-
-  /* Video: bottom of hero, full width */
-  #hero-mobile-video {
-    order: 2;
-    display: block;
-    position: static;
-    width: 100%;
-    height: 44vh;
-    object-fit: cover;
-    object-position: center;
-    flex-shrink: 0;
   }
 
   .hero h1 {
