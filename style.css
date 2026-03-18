@@ -507,25 +507,26 @@ img {
     display: none;
   }
 
-  /* Video: inline block, full width, top portion of screen */
+  /* Video: 16:9 ratio, full width — shows whole video frame */
   #hero-mobile-video {
     display: block;
     position: static;
     width: 100%;
-    height: 55vw;
-    max-height: 55vh;
+    aspect-ratio: 16 / 9;
+    max-height: 52vh;
     object-fit: cover;
+    object-position: center;
     flex-shrink: 0;
   }
 
-  /* Text area: fills remaining space, dark background */
+  /* Text area: anchored below video, not floating in the middle */
   .hero-content {
     flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     transform: none;
-    padding: 28px 24px 36px;
+    padding: 36px 24px 32px;
     max-width: 100%;
     text-align: center;
     background: var(--darker-bg);
