@@ -472,6 +472,11 @@ img {
   }
 }
 
+/* Mobile hero video — hidden on desktop */
+.hero-mobile-video {
+  display: none;
+}
+
 @media (max-width: 768px) {
   .hero {
     height: 100vh;
@@ -479,35 +484,41 @@ img {
     min-height: unset;
     padding-top: 0;
     padding-bottom: 0;
-    justify-content: flex-end;
+    justify-content: center;
   }
 
   .hero-overlay {
     background: linear-gradient(
-      to top,
-      rgba(0,0,0,0.85) 0%,
-      rgba(0,0,0,0.3) 50%,
-      rgba(0,0,0,0.15) 100%
+      to bottom,
+      rgba(0,0,0,0.55) 0%,
+      rgba(0,0,0,0.75) 100%
     );
   }
 
+  /* Hide desktop car image on mobile */
   #motion-car {
-    top: 0;
-    left: 50%;
-    right: auto;
-    bottom: 0;
-    transform: translateX(-40%);
-    height: 100%;
-    width: 100%;
-    object-fit: cover;
-    object-position: center center;
+    display: none;
   }
 
   .hero-content {
     transform: none;
-    padding: 0 0 56px;
+    padding: 80px 0 48px;
     max-width: 100%;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  /* Mobile video sits above the title */
+  .hero-mobile-video {
+    display: block;
+    width: 100%;
+    max-height: 40vh;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 24px;
   }
 
   .hero h1 {
