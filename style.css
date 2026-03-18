@@ -472,9 +472,8 @@ img {
   }
 }
 
-/* Mobile hero video — hidden on desktop */
+/* Mobile hero video */
 #hero-mobile-video {
-  display: none;
   position: absolute;
   top: 0;
   left: 0;
@@ -483,6 +482,13 @@ img {
   object-fit: cover;
   z-index: 1;
   pointer-events: none;
+}
+
+/* Explicitly hide video on desktop */
+@media (min-width: 769px) {
+  #hero-mobile-video {
+    display: none !important;
+  }
 }
 
 @media (max-width: 768px) {
@@ -507,13 +513,9 @@ img {
     );
   }
 
-  /* Hide desktop car image, show mobile video */
+  /* Hide desktop car image on mobile */
   #motion-car {
     display: none;
-  }
-
-  #hero-mobile-video {
-    display: block;
   }
 
   .hero-content {
