@@ -94,4 +94,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     observer.observe(video);
   }
+
+  // 4. Hero mobile video — play once on enter, hold last frame; replay on scroll back
+  const heroVideo = document.getElementById('hero-mobile-video');
+
+  if (heroVideo) {
+    const heroObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          // Hero is visible — replay from start
+          heroVideo.currentTime = 0;
+          heroVideo.play();
+        }
+        // When scrolled away, video has already stopped at last frame (no loop)
+      });
+    }, { threshold: 0.3 });
+
+    heroObserver.observe(heroVideo);
+  }
 });
