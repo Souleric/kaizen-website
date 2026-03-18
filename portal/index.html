@@ -1,0 +1,2185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kaizen Autocare — Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;1,14..32,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue-900: #1e3a8a;
+      --blue-700: #1d4ed8;
+      --blue-600: #2563eb;
+      --blue-500: #3b82f6;
+      --blue-400: #60a5fa;
+      --blue-100: #dbeafe;
+      --blue-50: #eff6ff;
+      --gray-900: #0f172a;
+      --gray-800: #1e293b;
+      --gray-700: #334155;
+      --gray-600: #475569;
+      --gray-500: #64748b;
+      --gray-400: #94a3b8;
+      --gray-300: #cbd5e1;
+      --gray-200: #e2e8f0;
+      --gray-100: #f1f5f9;
+      --gray-50: #f8fafc;
+      --green-500: #22c55e;
+      --green-100: #dcfce7;
+      --green-700: #15803d;
+      --orange-500: #f97316;
+      --orange-100: #ffedd5;
+      --orange-700: #c2410c;
+      --red-500: #ef4444;
+      --red-100: #fee2e2;
+      --red-700: #b91c1c;
+      --white: #ffffff;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+      --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+      --radius: 8px;
+      --radius-lg: 12px;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 14px;
+      color: var(--gray-800);
+      background: var(--gray-50);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── Login ─────────────────────────────────────────────── */
+    #login-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--blue-900) 0%, var(--blue-700) 100%);
+      padding: 24px;
+    }
+    .login-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 48px 40px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: var(--shadow-lg);
+    }
+    .login-logo {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .login-logo-mark {
+      width: 72px;
+      height: 72px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+    .login-logo-mark img { width: 72px; height: 72px; object-fit: contain; }
+    .login-logo h1 { font-size: 20px; font-weight: 700; color: var(--gray-900); letter-spacing: -0.3px; margin-top: 4px; }
+    .login-logo p { font-size: 13px; color: var(--gray-500); margin-top: 2px; }
+    .login-card h2 { font-size: 18px; font-weight: 600; color: var(--gray-900); margin-bottom: 24px; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 13px; font-weight: 500; color: var(--gray-700); margin-bottom: 6px; }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%; padding: 10px 12px;
+      border: 1px solid var(--gray-300); border-radius: var(--radius);
+      font-family: inherit; font-size: 14px; color: var(--gray-800);
+      background: var(--white);
+      transition: border-color 0.15s, box-shadow 0.15s;
+      outline: none;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      border-color: var(--blue-500);
+      box-shadow: 0 0 0 3px rgba(59,130,246,0.12);
+    }
+    .form-group textarea { resize: vertical; min-height: 80px; }
+    .form-row { display: grid; gap: 12px; }
+    .form-row.cols-2 { grid-template-columns: 1fr 1fr; }
+    .form-row.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 10px 16px; border-radius: var(--radius);
+      font-family: inherit; font-size: 14px; font-weight: 500;
+      cursor: pointer; border: none; transition: all 0.15s;
+      text-decoration: none; white-space: nowrap;
+    }
+    .btn-primary { background: var(--blue-600); color: white; }
+    .btn-primary:hover { background: var(--blue-700); }
+    .btn-secondary { background: var(--white); color: var(--gray-700); border: 1px solid var(--gray-300); }
+    .btn-secondary:hover { background: var(--gray-50); border-color: var(--gray-400); }
+    .btn-danger { background: var(--white); color: var(--red-700); border: 1px solid var(--red-500); }
+    .btn-danger:hover { background: var(--red-100); }
+    .btn-success { background: var(--green-500); color: white; }
+    .btn-success:hover { background: var(--green-700); }
+    .btn-ghost { background: transparent; color: var(--gray-600); }
+    .btn-ghost:hover { background: var(--gray-100); }
+    .btn-sm { padding: 6px 12px; font-size: 13px; }
+    .btn-full { width: 100%; justify-content: center; }
+    .btn-icon { padding: 8px; }
+    .login-error {
+      background: var(--red-100); color: var(--red-700);
+      border: 1px solid #fca5a5; border-radius: var(--radius);
+      padding: 10px 12px; font-size: 13px; margin-bottom: 16px;
+      display: none;
+    }
+
+    /* ─── App Shell ─────────────────────────────────────────── */
+    #app-shell { display: none; height: 100vh; flex-direction: column; }
+    #app-shell.active { display: flex; }
+
+    /* Top bar */
+    .topbar {
+      height: 60px; background: var(--white);
+      border-bottom: 1px solid var(--gray-200);
+      display: flex; align-items: center;
+      padding: 0 24px; gap: 16px;
+      flex-shrink: 0; position: sticky; top: 0; z-index: 100;
+      box-shadow: var(--shadow-sm);
+    }
+    .topbar-brand {
+      display: flex; align-items: center; gap: 10px;
+      font-weight: 700; font-size: 15px; color: var(--gray-900);
+      text-decoration: none;
+    }
+    .topbar-brand-icon {
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .topbar-brand-icon img { width: 32px; height: 32px; object-fit: contain; }
+    .topbar-divider { width: 1px; height: 20px; background: var(--gray-200); }
+    .topbar-title { font-size: 14px; font-weight: 500; color: var(--gray-600); }
+    .topbar-spacer { flex: 1; }
+    .topbar-user {
+      display: flex; align-items: center; gap: 10px;
+      padding: 6px 12px; border-radius: var(--radius);
+      cursor: pointer; transition: background 0.15s;
+    }
+    .topbar-user:hover { background: var(--gray-100); }
+    .avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 600; color: white;
+      background: var(--blue-600); flex-shrink: 0;
+    }
+    .avatar.admin { background: var(--blue-900); }
+    .avatar.customer { background: var(--blue-500); }
+    .topbar-user-info { line-height: 1.2; }
+    .topbar-user-name { font-size: 13px; font-weight: 600; color: var(--gray-800); }
+    .topbar-user-role { font-size: 11px; color: var(--gray-500); text-transform: capitalize; }
+
+    /* Main layout */
+    .app-body { display: flex; flex: 1; overflow: hidden; }
+
+    /* Sidebar */
+    .sidebar {
+      width: 220px; background: var(--white);
+      border-right: 1px solid var(--gray-200);
+      padding: 16px 12px; overflow-y: auto;
+      flex-shrink: 0;
+    }
+    .sidebar-section { margin-bottom: 24px; }
+    .sidebar-section-label {
+      font-size: 10px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.8px; color: var(--gray-400);
+      padding: 0 8px; margin-bottom: 4px;
+    }
+    .nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 12px; border-radius: var(--radius);
+      font-size: 13.5px; font-weight: 500; color: var(--gray-600);
+      cursor: pointer; transition: all 0.15s; border: none;
+      background: none; width: 100%; text-align: left; text-decoration: none;
+    }
+    .nav-item:hover { background: var(--blue-50); color: var(--blue-700); }
+    .nav-item.active { background: var(--blue-50); color: var(--blue-700); }
+    .nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+    /* Main content */
+    .main-content { flex: 1; overflow-y: auto; padding: 28px 32px; }
+
+    /* ─── Page Headers ──────────────────────────────────────── */
+    .page-header { margin-bottom: 24px; }
+    .page-header-top { display: flex; align-items: center; gap: 12px; margin-bottom: 4px; }
+    .page-back { color: var(--gray-400); cursor: pointer; display: flex; align-items: center; gap: 4px; font-size: 13px; transition: color 0.15s; }
+    .page-back:hover { color: var(--blue-600); }
+    .page-title { font-size: 22px; font-weight: 700; color: var(--gray-900); letter-spacing: -0.3px; }
+    .page-subtitle { font-size: 14px; color: var(--gray-500); margin-top: 2px; }
+    .page-actions { display: flex; gap: 8px; margin-top: 16px; }
+
+    /* ─── Cards ─────────────────────────────────────────────── */
+    .card {
+      background: var(--white); border: 1px solid var(--gray-200);
+      border-radius: var(--radius-lg); overflow: hidden;
+    }
+    .card-header {
+      padding: 16px 20px; border-bottom: 1px solid var(--gray-200);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .card-title { font-size: 15px; font-weight: 600; color: var(--gray-900); }
+    .card-subtitle { font-size: 13px; color: var(--gray-500); margin-top: 1px; }
+    .card-body { padding: 20px; }
+    .card-footer { padding: 12px 20px; border-top: 1px solid var(--gray-200); background: var(--gray-50); }
+
+    /* ─── Stat Cards ─────────────────────────────────────────── */
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .stat-card {
+      background: var(--white); border: 1px solid var(--gray-200);
+      border-radius: var(--radius-lg); padding: 20px;
+    }
+    .stat-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .stat-card-label { font-size: 12px; font-weight: 500; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.5px; }
+    .stat-card-icon {
+      width: 36px; height: 36px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .stat-card-icon.blue { background: var(--blue-50); color: var(--blue-600); }
+    .stat-card-icon.green { background: var(--green-100); color: var(--green-700); }
+    .stat-card-icon.orange { background: var(--orange-100); color: var(--orange-700); }
+    .stat-card-icon svg { width: 18px; height: 18px; }
+    .stat-card-value { font-size: 28px; font-weight: 700; color: var(--gray-900); line-height: 1; }
+    .stat-card-sub { font-size: 12px; color: var(--gray-500); margin-top: 4px; }
+
+    /* ─── Tables ─────────────────────────────────────────────── */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    thead th {
+      padding: 10px 16px; font-size: 11px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.6px; color: var(--gray-500);
+      background: var(--gray-50); border-bottom: 1px solid var(--gray-200);
+      text-align: left;
+    }
+    tbody tr { border-bottom: 1px solid var(--gray-100); transition: background 0.1s; }
+    tbody tr:hover { background: var(--gray-50); }
+    tbody tr:last-child { border-bottom: none; }
+    tbody td { padding: 12px 16px; font-size: 14px; color: var(--gray-700); vertical-align: middle; }
+    .td-primary { font-weight: 500; color: var(--gray-900); }
+    .td-link { color: var(--blue-600); cursor: pointer; font-weight: 500; text-decoration: none; }
+    .td-link:hover { text-decoration: underline; }
+
+    /* ─── Badges ─────────────────────────────────────────────── */
+    .badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 2px 8px; border-radius: 999px;
+      font-size: 11px; font-weight: 600; text-transform: capitalize;
+    }
+    .badge-blue { background: var(--blue-100); color: var(--blue-700); }
+    .badge-green { background: var(--green-100); color: var(--green-700); }
+    .badge-orange { background: var(--orange-100); color: var(--orange-700); }
+    .badge-red { background: var(--red-100); color: var(--red-700); }
+    .badge-gray { background: var(--gray-100); color: var(--gray-600); }
+
+    /* ─── Search & Toolbar ───────────────────────────────────── */
+    .toolbar { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .search-wrap { position: relative; flex: 1; max-width: 320px; }
+    .search-wrap svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; color: var(--gray-400); }
+    .search-input {
+      width: 100%; padding: 8px 12px 8px 32px;
+      border: 1px solid var(--gray-300); border-radius: var(--radius);
+      font-family: inherit; font-size: 13px; background: var(--white);
+      outline: none; transition: border-color 0.15s, box-shadow 0.15s;
+      color: var(--gray-800);
+    }
+    .search-input:focus { border-color: var(--blue-500); box-shadow: 0 0 0 3px rgba(59,130,246,0.12); }
+    .toolbar-spacer { flex: 1; }
+
+    /* ─── Empty State ────────────────────────────────────────── */
+    .empty-state {
+      text-align: center; padding: 48px 24px;
+      color: var(--gray-400);
+    }
+    .empty-state svg { width: 48px; height: 48px; margin: 0 auto 12px; display: block; opacity: 0.5; }
+    .empty-state p { font-size: 14px; }
+    .empty-state .empty-title { font-size: 15px; font-weight: 500; color: var(--gray-500); margin-bottom: 4px; }
+
+    /* ─── Modal ──────────────────────────────────────────────── */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.4); backdrop-filter: blur(2px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px; z-index: 1000;
+      opacity: 0; visibility: hidden; transition: all 0.2s;
+    }
+    .modal-overlay.open { opacity: 1; visibility: visible; }
+    .modal {
+      background: var(--white); border-radius: var(--radius-lg);
+      width: 100%; max-width: 520px; max-height: 90vh;
+      overflow-y: auto; box-shadow: var(--shadow-lg);
+      transform: translateY(8px); transition: transform 0.2s;
+    }
+    .modal-overlay.open .modal { transform: translateY(0); }
+    .modal-header {
+      padding: 20px 24px; border-bottom: 1px solid var(--gray-200);
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; background: var(--white); z-index: 1;
+    }
+    .modal-title { font-size: 16px; font-weight: 600; color: var(--gray-900); }
+    .modal-close {
+      width: 28px; height: 28px; border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gray-400); cursor: pointer; border: none; background: none;
+      transition: all 0.15s;
+    }
+    .modal-close:hover { background: var(--gray-100); color: var(--gray-700); }
+    .modal-body { padding: 24px; }
+    .modal-footer {
+      padding: 16px 24px; border-top: 1px solid var(--gray-200);
+      display: flex; justify-content: flex-end; gap: 8px;
+      background: var(--gray-50);
+    }
+
+    /* ─── Calendar ───────────────────────────────────────────── */
+    .calendar-wrap { user-select: none; }
+    .calendar-nav {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .calendar-nav h3 { font-size: 15px; font-weight: 600; color: var(--gray-900); }
+    .calendar-nav button {
+      width: 32px; height: 32px; border-radius: var(--radius);
+      display: flex; align-items: center; justify-content: center;
+      border: 1px solid var(--gray-300); background: var(--white);
+      cursor: pointer; color: var(--gray-600); transition: all 0.15s;
+    }
+    .calendar-nav button:hover { background: var(--gray-100); }
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+    .cal-day-name { text-align: center; font-size: 11px; font-weight: 600; color: var(--gray-400); padding: 4px 0 8px; text-transform: uppercase; }
+    .cal-day {
+      aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+      border-radius: 6px; font-size: 13px; color: var(--gray-700);
+      cursor: pointer; transition: all 0.15s; position: relative;
+    }
+    .cal-day:hover { background: var(--blue-50); color: var(--blue-700); }
+    .cal-day.other-month { color: var(--gray-300); }
+    .cal-day.today { font-weight: 700; color: var(--blue-600); }
+    .cal-day.selected { background: var(--blue-600); color: white; }
+    .cal-day.has-event::after {
+      content: ''; position: absolute; bottom: 3px; left: 50%; transform: translateX(-50%);
+      width: 4px; height: 4px; border-radius: 50%; background: var(--blue-400);
+    }
+    .cal-day.selected.has-event::after { background: rgba(255,255,255,0.7); }
+    .cal-day.disabled { color: var(--gray-300); pointer-events: none; }
+
+    /* Big calendar view for admin */
+    .big-calendar .cal-day { font-size: 14px; min-height: 60px; align-items: flex-start; padding: 6px; flex-direction: column; gap: 2px; border: 1px solid transparent; aspect-ratio: auto; }
+    .big-calendar .cal-day:hover { border-color: var(--blue-300); }
+    .big-calendar .cal-day .day-num { font-size: 13px; font-weight: 500; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+    .big-calendar .cal-day.today .day-num { background: var(--blue-600); color: white; font-weight: 600; }
+    .cal-event {
+      font-size: 10px; padding: 1px 5px; border-radius: 3px;
+      background: var(--blue-100); color: var(--blue-800);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      max-width: 100%; cursor: pointer;
+    }
+    .cal-event:hover { background: var(--blue-200); }
+
+    /* ─── Countdown ──────────────────────────────────────────── */
+    .countdown-card {
+      background: linear-gradient(135deg, var(--blue-900), var(--blue-700));
+      border-radius: var(--radius-lg); padding: 28px;
+      color: white; margin-bottom: 16px;
+    }
+    .countdown-label { font-size: 12px; font-weight: 500; opacity: 0.8; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
+    .countdown-title { font-size: 20px; font-weight: 700; margin-bottom: 20px; }
+    .countdown-units { display: flex; gap: 16px; margin-bottom: 20px; }
+    .countdown-unit { text-align: center; }
+    .countdown-num { font-size: 36px; font-weight: 700; line-height: 1; }
+    .countdown-unit-label { font-size: 11px; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
+    .countdown-date { font-size: 13px; opacity: 0.8; }
+
+    /* ─── Car Card ───────────────────────────────────────────── */
+    .car-card {
+      border: 1px solid var(--gray-200); border-radius: var(--radius-lg);
+      padding: 16px 20px; background: var(--white);
+      display: flex; align-items: center; gap: 16px;
+      transition: border-color 0.15s;
+    }
+    .car-card:hover { border-color: var(--blue-300); }
+    .car-icon {
+      width: 48px; height: 48px; background: var(--blue-50);
+      border-radius: 10px; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .car-icon svg { width: 26px; height: 26px; color: var(--blue-600); }
+    .car-info { flex: 1; }
+    .car-name { font-size: 15px; font-weight: 600; color: var(--gray-900); }
+    .car-plate { font-size: 13px; color: var(--gray-500); margin-top: 1px; }
+    .car-meta { font-size: 12px; color: var(--gray-400); margin-top: 2px; }
+    .car-actions { display: flex; gap: 6px; }
+
+    /* ─── Timeline / service list ────────────────────────────── */
+    .service-list { display: flex; flex-direction: column; gap: 2px; }
+    .service-item {
+      display: flex; align-items: flex-start; gap: 16px;
+      padding: 14px 16px; border-radius: var(--radius);
+      transition: background 0.1s; cursor: default;
+    }
+    .service-item:hover { background: var(--gray-50); }
+    .service-date-col { min-width: 72px; text-align: right; }
+    .service-date { font-size: 12px; font-weight: 600; color: var(--gray-500); }
+    .service-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--blue-400); flex-shrink: 0; margin-top: 4px; }
+    .service-content { flex: 1; }
+    .service-type { font-size: 14px; font-weight: 600; color: var(--gray-900); }
+    .service-desc { font-size: 13px; color: var(--gray-500); margin-top: 2px; }
+    .service-price { font-size: 13px; font-weight: 600; color: var(--gray-700); min-width: 80px; text-align: right; }
+
+    /* ─── Info rows ──────────────────────────────────────────── */
+    .info-list { display: flex; flex-direction: column; gap: 12px; }
+    .info-row { display: flex; gap: 16px; }
+    .info-label { min-width: 140px; font-size: 13px; color: var(--gray-500); font-weight: 500; }
+    .info-value { font-size: 13px; color: var(--gray-800); font-weight: 400; }
+
+    /* ─── Grid layouts ───────────────────────────────────────── */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+    @media (max-width: 768px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+
+    /* ─── Alert / Toast ──────────────────────────────────────── */
+    .toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; }
+    .toast {
+      background: var(--gray-900); color: white;
+      padding: 12px 16px; border-radius: var(--radius);
+      font-size: 13px; box-shadow: var(--shadow-lg);
+      display: flex; align-items: center; gap: 8px;
+      animation: slideIn 0.2s ease;
+      max-width: 320px;
+    }
+    .toast.success { background: var(--green-700); }
+    .toast.error { background: var(--red-700); }
+    @keyframes slideIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeOut { to { opacity: 0; transform: translateY(4px); } }
+
+    /* ─── Divider ────────────────────────────────────────────── */
+    .divider { height: 1px; background: var(--gray-200); margin: 20px 0; }
+    .section-gap { margin-bottom: 24px; }
+    .flex { display: flex; }
+    .items-center { align-items: center; }
+    .gap-2 { gap: 8px; }
+    .gap-3 { gap: 12px; }
+    .ml-auto { margin-left: auto; }
+    .mt-1 { margin-top: 4px; }
+    .mt-2 { margin-top: 8px; }
+    .mt-3 { margin-top: 12px; }
+    .mt-4 { margin-top: 16px; }
+    .text-sm { font-size: 13px; }
+    .text-muted { color: var(--gray-500); }
+    .font-600 { font-weight: 600; }
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════ LOGIN -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="login-logo-mark">
+        <img src="../public/logo.png" alt="Kaizen Autocare">
+      </div>
+      <h1>Kaizen Autocare</h1>
+      <p>Customer Portal</p>
+    </div>
+    <h2>Sign in to your account</h2>
+    <div id="login-error" class="login-error">Invalid username or password.</div>
+    <div class="form-group">
+      <label>Username</label>
+      <input type="text" id="login-username" placeholder="Enter username" autocomplete="username">
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="login-password" placeholder="Enter password" autocomplete="current-password">
+    </div>
+    <button class="btn btn-primary btn-full" id="login-btn" style="margin-top:8px; padding: 12px;">Sign In</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ APP -->
+<div id="app-shell">
+  <!-- Topbar -->
+  <div class="topbar">
+    <a class="topbar-brand" href="#">
+      <div class="topbar-brand-icon">
+        <img src="../public/logo.png" alt="Kaizen Autocare">
+      </div>
+      Kaizen Autocare
+    </a>
+    <div class="topbar-divider"></div>
+    <span class="topbar-title" id="topbar-section">Portal</span>
+    <div class="topbar-spacer"></div>
+    <div class="topbar-user" id="topbar-user-btn">
+      <div class="avatar" id="topbar-avatar">A</div>
+      <div class="topbar-user-info">
+        <div class="topbar-user-name" id="topbar-username">Admin</div>
+        <div class="topbar-user-role" id="topbar-role">Administrator</div>
+      </div>
+    </div>
+    <button class="btn btn-ghost btn-sm" id="logout-btn" style="color:var(--gray-500);">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Sign Out
+    </button>
+  </div>
+
+  <div class="app-body">
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+      <!-- nav items injected by JS -->
+    </nav>
+
+    <!-- Main -->
+    <main class="main-content" id="main-content">
+      <!-- views injected by JS -->
+    </main>
+  </div>
+</div>
+
+<!-- Toast container -->
+<div class="toast-container" id="toast-container"></div>
+
+<!-- ═══════════════════════════════════════════════════════════════ MODALS -->
+<!-- Generic modal -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="modal-title">Modal</span>
+      <button class="modal-close" id="modal-close-btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-footer" id="modal-footer"></div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════ DATA
+const DB_KEY = 'kaizen_portal_db';
+
+const INITIAL_DATA = {
+  users: [
+    { id: 'u1', username: 'admin', password: '123', role: 'master_admin', displayName: 'Admin' },
+    { id: 'u2', username: 'cust', password: '123', role: 'customer', customerId: 'c1' }
+  ],
+  customers: [
+    { id: 'c1', name: 'Alex Tan', email: 'alex.tan@email.com', phone: '+60 12-345 6789', address: 'Petaling Jaya, Selangor', createdAt: '2024-01-15' }
+  ],
+  cars: [
+    { id: 'car1', customerId: 'c1', make: 'Volkswagen', model: 'Tiguan', year: '2021', plateNumber: 'WXY 1234', color: 'Silver' }
+  ],
+  services: [
+    { id: 's1', carId: 'car1', customerId: 'c1', date: '2025-12-10', type: 'Oil Change', description: 'Full synthetic engine oil change + oil filter replacement', price: 280, mileage: 45000 },
+    { id: 's2', carId: 'car1', customerId: 'c1', date: '2025-09-05', type: 'Brake Service', description: 'Front brake pads and rotors replacement', price: 850, mileage: 43200 },
+    { id: 's3', carId: 'car1', customerId: 'c1', date: '2025-06-20', type: 'Air Filter', description: 'Engine air filter + cabin air filter replacement', price: 180, mileage: 40500 },
+    { id: 's4', carId: 'car1', customerId: 'c1', date: '2025-03-14', type: 'Oil Change', description: 'Full synthetic engine oil change + oil filter', price: 280, mileage: 37800 }
+  ],
+  appointments: [],
+  nextServices: [
+    { id: 'ns1', customerId: 'c1', carId: 'car1', date: '2026-06-10', type: 'Oil Change', notes: 'Due at approximately 50,000 km' }
+  ]
+};
+
+function loadDB() {
+  try {
+    const raw = localStorage.getItem(DB_KEY);
+    return raw ? JSON.parse(raw) : JSON.parse(JSON.stringify(INITIAL_DATA));
+  } catch { return JSON.parse(JSON.stringify(INITIAL_DATA)); }
+}
+
+function saveDB(db) {
+  localStorage.setItem(DB_KEY, JSON.stringify(db));
+}
+
+function getDB() { return _db; }
+
+let _db = loadDB();
+// Ensure master admin and cust exist; upgrade legacy 'admin' role to 'master_admin'
+const adminUser = _db.users.find(u => u.username === 'admin');
+const custExists = _db.users.find(u => u.username === 'cust');
+if (!adminUser) _db.users.push({ id: 'u1', username: 'admin', password: '123', role: 'master_admin', displayName: 'Admin' });
+else if (adminUser.role === 'admin' && adminUser.username === 'admin' && adminUser.id === 'u1') adminUser.role = 'master_admin';
+if (!custExists) _db.users.push({ id: 'u2', username: 'cust', password: '123', role: 'customer', customerId: 'c1' });
+saveDB(_db);
+
+// Role helpers
+function isAdminRole(role) { return role === 'master_admin' || role === 'admin' || role === 'user'; }
+function canManageTeam(role) { return role === 'master_admin' || role === 'admin'; }
+
+// ═══════════════════════════════════════════════════════════ AUTH
+let currentUser = null;
+
+function login(username, password) {
+  const db = getDB();
+  const user = db.users.find(u => u.username === username && u.password === password);
+  return user || null;
+}
+
+function logout() {
+  currentUser = null;
+  sessionStorage.removeItem('kaizen_user');
+  showLogin();
+}
+
+// ═══════════════════════════════════════════════════════════ ROUTING
+let currentView = null;
+let viewState = {};
+
+function navigate(view, state = {}) {
+  currentView = view;
+  viewState = state;
+  renderView(view, state);
+  updateNav(view);
+}
+
+// ═══════════════════════════════════════════════════════════ NAV
+function getAdminNav() {
+  const base = [
+    { section: 'Management', items: [
+      { id: 'admin-dashboard', label: 'Dashboard', icon: iconGrid() },
+      { id: 'admin-customers', label: 'Customers', icon: iconUsers() },
+      { id: 'admin-calendar', label: 'Service Calendar', icon: iconCalendar() },
+    ]},
+    { section: 'Settings', items: [
+      { id: 'admin-all-services', label: 'All Services', icon: iconWrench() },
+    ]}
+  ];
+  if (canManageTeam(currentUser.role)) {
+    base[1].items.push({ id: 'admin-team', label: 'Team & Roles', icon: iconShield() });
+  }
+  return base;
+}
+
+const CUSTOMER_NAV = [
+  { section: 'My Account', items: [
+    { id: 'cust-dashboard', label: 'Dashboard', icon: iconGrid() },
+    { id: 'cust-vehicles', label: 'My Vehicles', icon: iconCar() },
+    { id: 'cust-services', label: 'Service History', icon: iconWrench() },
+    { id: 'cust-appointments', label: 'Book Appointment', icon: iconCalendar() },
+  ]}
+];
+
+function renderSidebar() {
+  const nav = isAdminRole(currentUser.role) ? getAdminNav() : CUSTOMER_NAV;
+  const sidebar = document.getElementById('sidebar');
+  sidebar.innerHTML = nav.map(section => `
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">${section.section}</div>
+      ${section.items.map(item => `
+        <button class="nav-item" data-view="${item.id}" onclick="navigate('${item.id}')">
+          ${item.icon} ${item.label}
+        </button>
+      `).join('')}
+    </div>
+  `).join('');
+}
+
+function updateNav(view) {
+  document.querySelectorAll('.nav-item').forEach(el => {
+    el.classList.toggle('active', el.dataset.view === view);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════ VIEWS
+
+function renderView(view, state) {
+  const main = document.getElementById('main-content');
+  const sectionTitles = {
+    'admin-dashboard': 'Dashboard',
+    'admin-customers': 'Customers',
+    'admin-customer-detail': 'Customer Detail',
+    'admin-calendar': 'Service Calendar',
+    'admin-all-services': 'All Services',
+    'admin-team': 'Team & Roles',
+    'cust-dashboard': 'Dashboard',
+    'cust-vehicles': 'My Vehicles',
+    'cust-services': 'Service History',
+    'cust-appointments': 'Book Appointment',
+    'cust-next-service': 'Next Service',
+  };
+  document.getElementById('topbar-section').textContent = sectionTitles[view] || 'Portal';
+
+  switch(view) {
+    case 'admin-dashboard': main.innerHTML = viewAdminDashboard(); break;
+    case 'admin-customers': main.innerHTML = viewAdminCustomers(state); break;
+    case 'admin-customer-detail': main.innerHTML = viewAdminCustomerDetail(state); break;
+    case 'admin-calendar': main.innerHTML = viewAdminCalendar(state); break;
+    case 'admin-all-services': main.innerHTML = viewAdminAllServices(); break;
+    case 'admin-team': main.innerHTML = canManageTeam(currentUser.role) ? viewAdminTeam() : viewAdminDashboard(); break;
+    case 'cust-dashboard': main.innerHTML = viewCustDashboard(); break;
+    case 'cust-vehicles': main.innerHTML = viewCustVehicles(); break;
+    case 'cust-services': main.innerHTML = viewCustServices(); break;
+    case 'cust-appointments': main.innerHTML = viewCustAppointments(); break;
+    default: main.innerHTML = '<div class="page-header"><div class="page-title">Page Not Found</div></div>';
+  }
+  main.scrollTop = 0;
+  attachViewHandlers(view, state);
+}
+
+// ─── Admin Dashboard ────────────────────────────────────────────
+function viewAdminDashboard() {
+  const db = getDB();
+  const custCount = db.customers.length;
+  const carCount = db.cars.length;
+  const serviceCount = db.services.length;
+  const upcoming = db.nextServices.filter(ns => new Date(ns.date) >= new Date()).length;
+  const pendingApts = db.appointments.filter(a => a.status === 'pending').length;
+  const revenue = db.services.reduce((s, sv) => s + (sv.price || 0), 0);
+
+  const recentServices = [...db.services].sort((a,b) => new Date(b.date)-new Date(a.date)).slice(0,5);
+
+  return `
+    <div class="page-header">
+      <div class="page-title">Dashboard</div>
+      <div class="page-subtitle">Welcome back, ${currentUser.username}. Here's what's happening.</div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-card-header">
+          <div class="stat-card-label">Customers</div>
+          <div class="stat-card-icon blue">${iconUsers()}</div>
+        </div>
+        <div class="stat-card-value">${custCount}</div>
+        <div class="stat-card-sub">Registered profiles</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-header">
+          <div class="stat-card-label">Vehicles</div>
+          <div class="stat-card-icon blue">${iconCar()}</div>
+        </div>
+        <div class="stat-card-value">${carCount}</div>
+        <div class="stat-card-sub">Cars on record</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-header">
+          <div class="stat-card-label">Service Records</div>
+          <div class="stat-card-icon green">${iconWrench()}</div>
+        </div>
+        <div class="stat-card-value">${serviceCount}</div>
+        <div class="stat-card-sub">Total jobs completed</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-header">
+          <div class="stat-card-label">Upcoming Services</div>
+          <div class="stat-card-icon orange">${iconCalendar()}</div>
+        </div>
+        <div class="stat-card-value">${upcoming}</div>
+        <div class="stat-card-sub">Scheduled next services</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-header">
+          <div class="stat-card-label">Pending Appointments</div>
+          <div class="stat-card-icon orange">${iconClock()}</div>
+        </div>
+        <div class="stat-card-value">${pendingApts}</div>
+        <div class="stat-card-sub">Awaiting confirmation</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-header">
+          <div class="stat-card-label">Total Revenue</div>
+          <div class="stat-card-icon green">${iconMoney()}</div>
+        </div>
+        <div class="stat-card-value">RM ${revenue.toLocaleString()}</div>
+        <div class="stat-card-sub">From all service records</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Recent Services</div>
+            <div class="card-subtitle">Latest service records</div>
+          </div>
+          <button class="btn btn-secondary btn-sm" onclick="navigate('admin-all-services')">View All</button>
+        </div>
+        ${recentServices.length ? `
+          <div class="service-list" style="padding: 8px 0;">
+            ${recentServices.map(sv => {
+              const car = db.cars.find(c => c.id === sv.carId);
+              const cust = db.customers.find(c => c.id === sv.customerId);
+              return `<div class="service-item">
+                <div class="service-date-col"><div class="service-date">${formatDate(sv.date)}</div></div>
+                <div class="service-dot" style="margin-top:6px;"></div>
+                <div class="service-content">
+                  <div class="service-type">${sv.type}</div>
+                  <div class="service-desc">${cust ? cust.name : '—'} · ${car ? car.make+' '+car.model : '—'}</div>
+                </div>
+                <div class="service-price">RM ${sv.price}</div>
+              </div>`;
+            }).join('')}
+          </div>
+        ` : '<div class="empty-state"><p>No service records yet.</p></div>'}
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Pending Appointments</div>
+            <div class="card-subtitle">Customer booking requests</div>
+          </div>
+        </div>
+        ${db.appointments.filter(a=>a.status==='pending').length ? `
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Customer</th><th>Date</th><th>Type</th><th>Action</th></tr></thead>
+              <tbody>
+                ${db.appointments.filter(a=>a.status==='pending').slice(0,5).map(apt => {
+                  const cust = db.customers.find(c => c.id === apt.customerId);
+                  return `<tr>
+                    <td class="td-primary">${cust ? cust.name : apt.customerId}</td>
+                    <td>${formatDate(apt.date)}</td>
+                    <td><span class="badge badge-blue">${apt.type}</span></td>
+                    <td>
+                      <div style="display:flex;gap:4px;">
+                        <button class="btn btn-success btn-sm" onclick="confirmAppointment('${apt.id}')">Confirm</button>
+                        <button class="btn btn-danger btn-sm" onclick="cancelAppointment('${apt.id}')">Decline</button>
+                      </div>
+                    </td>
+                  </tr>`;
+                }).join('')}
+              </tbody>
+            </table>
+          </div>
+        ` : '<div class="empty-state"><p>No pending appointments.</p></div>'}
+      </div>
+    </div>
+  `;
+}
+
+// ─── Admin Customers ────────────────────────────────────────────
+function viewAdminCustomers(state = {}) {
+  const db = getDB();
+  const q = state.q || '';
+  const customers = db.customers.filter(c =>
+    !q || c.name.toLowerCase().includes(q.toLowerCase()) || c.phone.includes(q) || c.email.toLowerCase().includes(q.toLowerCase())
+  );
+
+  return `
+    <div class="page-header">
+      <div class="page-title">Customers</div>
+      <div class="page-subtitle">${db.customers.length} registered customer${db.customers.length !== 1 ? 's' : ''}</div>
+    </div>
+
+    <div class="toolbar">
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input class="search-input" id="customer-search" type="text" placeholder="Search by name, phone, email…" value="${q}" oninput="searchCustomers(this.value)">
+      </div>
+      <div class="toolbar-spacer"></div>
+      <button class="btn btn-primary" onclick="openAddCustomerModal()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add Customer
+      </button>
+    </div>
+
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th><th>Phone</th><th>Email</th><th>Vehicles</th><th>Services</th><th>Member Since</th><th></th>
+            </tr>
+          </thead>
+          <tbody>
+            ${customers.length ? customers.map(c => {
+              const cars = db.cars.filter(car => car.customerId === c.id);
+              const services = db.services.filter(sv => sv.customerId === c.id);
+              return `<tr>
+                <td>
+                  <div class="td-primary td-link" onclick="navigate('admin-customer-detail', {customerId:'${c.id}'})">${c.name}</div>
+                </td>
+                <td>${c.phone}</td>
+                <td>${c.email}</td>
+                <td><span class="badge badge-blue">${cars.length} vehicle${cars.length!==1?'s':''}</span></td>
+                <td>${services.length} record${services.length!==1?'s':''}</td>
+                <td>${formatDate(c.createdAt)}</td>
+                <td>
+                  <div style="display:flex;gap:4px;">
+                    <button class="btn btn-secondary btn-sm" onclick="navigate('admin-customer-detail', {customerId:'${c.id}'})">View</button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteCustomer('${c.id}')">Delete</button>
+                  </div>
+                </td>
+              </tr>`;
+            }).join('') : `<tr><td colspan="7"><div class="empty-state">${iconUsers()}<div class="empty-title">No customers found</div><p>${q ? 'Try a different search term.' : 'Add your first customer to get started.'}</p></div></td></tr>`}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+// ─── Admin Customer Detail ──────────────────────────────────────
+function viewAdminCustomerDetail(state = {}) {
+  const db = getDB();
+  const cust = db.customers.find(c => c.id === state.customerId);
+  if (!cust) return '<div class="page-header"><div class="page-title">Customer not found</div></div>';
+
+  const cars = db.cars.filter(c => c.customerId === cust.id);
+  const services = db.services.filter(s => s.customerId === cust.id).sort((a,b) => new Date(b.date)-new Date(a.date));
+  const appointments = db.appointments.filter(a => a.customerId === cust.id).sort((a,b) => new Date(b.date)-new Date(a.date));
+  const nextServs = db.nextServices.filter(ns => ns.customerId === cust.id);
+  const totalSpend = services.reduce((s,sv) => s + (sv.price||0), 0);
+
+  return `
+    <div class="page-header">
+      <div class="page-header-top">
+        <span class="page-back" onclick="navigate('admin-customers')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+          Customers
+        </span>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px;margin-top:8px;">
+        <div class="avatar admin" style="width:48px;height:48px;font-size:18px;">${cust.name.charAt(0)}</div>
+        <div>
+          <div class="page-title">${cust.name}</div>
+          <div class="page-subtitle">${cust.phone} · ${cust.email}</div>
+        </div>
+        <div class="ml-auto" style="display:flex;gap:8px;">
+          <button class="btn btn-secondary" onclick="openEditCustomerModal('${cust.id}')">Edit Profile</button>
+          <button class="btn btn-primary" onclick="openAddCarModal('${cust.id}')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Vehicle
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-bottom:20px;">
+      <div class="stat-card">
+        <div class="stat-card-header"><div class="stat-card-label">Total Spend</div><div class="stat-card-icon green">${iconMoney()}</div></div>
+        <div class="stat-card-value">RM ${totalSpend.toLocaleString()}</div>
+        <div class="stat-card-sub">${services.length} service records</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-header"><div class="stat-card-label">Vehicles</div><div class="stat-card-icon blue">${iconCar()}</div></div>
+        <div class="stat-card-value">${cars.length}</div>
+        <div class="stat-card-sub">Registered vehicles</div>
+      </div>
+    </div>
+
+    <!-- Customer Info -->
+    <div class="card section-gap">
+      <div class="card-header">
+        <div class="card-title">Profile Information</div>
+        <button class="btn btn-secondary btn-sm" onclick="openEditCustomerModal('${cust.id}')">Edit</button>
+      </div>
+      <div class="card-body">
+        <div class="info-list">
+          <div class="info-row"><div class="info-label">Full Name</div><div class="info-value">${cust.name}</div></div>
+          <div class="info-row"><div class="info-label">Phone Number</div><div class="info-value">${cust.phone}</div></div>
+          <div class="info-row"><div class="info-label">Email Address</div><div class="info-value">${cust.email}</div></div>
+          <div class="info-row"><div class="info-label">Address</div><div class="info-value">${cust.address || '—'}</div></div>
+          <div class="info-row"><div class="info-label">Member Since</div><div class="info-value">${formatDate(cust.createdAt)}</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vehicles -->
+    <div class="card section-gap">
+      <div class="card-header">
+        <div class="card-title">Vehicles</div>
+        <button class="btn btn-primary btn-sm" onclick="openAddCarModal('${cust.id}')">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add Vehicle
+        </button>
+      </div>
+      <div class="card-body" style="display:flex;flex-direction:column;gap:10px;">
+        ${cars.length ? cars.map(car => {
+          const carServices = db.services.filter(s => s.carId === car.id);
+          const lastService = carServices.sort((a,b)=>new Date(b.date)-new Date(a.date))[0];
+          const nextSv = db.nextServices.find(ns => ns.carId === car.id);
+          return `<div class="car-card">
+            <div class="car-icon">${iconCar()}</div>
+            <div class="car-info">
+              <div class="car-name">${car.year} ${car.make} ${car.model}</div>
+              <div class="car-plate">Plate: ${car.plateNumber} · ${car.color}</div>
+              <div class="car-meta">
+                ${lastService ? `Last service: ${formatDate(lastService.date)} (${lastService.type})` : 'No service records'}
+                ${nextSv ? ` · Next: ${formatDate(nextSv.date)} (${nextSv.type})` : ''}
+              </div>
+            </div>
+            <div class="car-actions">
+              <button class="btn btn-primary btn-sm" onclick="openAddServiceModal('${cust.id}','${car.id}')">Add Service</button>
+              <button class="btn btn-secondary btn-sm" onclick="openSetNextServiceModal('${cust.id}','${car.id}')">Set Next Service</button>
+              <button class="btn btn-danger btn-sm" onclick="deleteCar('${car.id}','${cust.id}')">Remove</button>
+            </div>
+          </div>`;
+        }).join('') : `<div class="empty-state">${iconCar()}<div class="empty-title">No vehicles</div><p>Add a vehicle to this customer's profile.</p></div>`}
+      </div>
+    </div>
+
+    <!-- Next Services -->
+    ${nextServs.length ? `
+    <div class="card section-gap">
+      <div class="card-header">
+        <div class="card-title">Upcoming Next Services</div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Vehicle</th><th>Service Type</th><th>Scheduled Date</th><th>Days Away</th><th>Notes</th><th></th></tr></thead>
+          <tbody>
+            ${nextServs.map(ns => {
+              const car = db.cars.find(c => c.id === ns.carId);
+              const daysAway = Math.ceil((new Date(ns.date) - new Date()) / (1000*60*60*24));
+              return `<tr>
+                <td class="td-primary">${car ? car.make+' '+car.model : '—'}</td>
+                <td><span class="badge badge-blue">${ns.type}</span></td>
+                <td>${formatDate(ns.date)}</td>
+                <td><span class="badge ${daysAway < 30 ? 'badge-orange' : 'badge-green'}">${daysAway > 0 ? daysAway+' days' : 'Overdue'}</span></td>
+                <td class="text-muted">${ns.notes || '—'}</td>
+                <td>
+                  <button class="btn btn-danger btn-sm" onclick="deleteNextService('${ns.id}','${cust.id}')">Remove</button>
+                </td>
+              </tr>`;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    ` : ''}
+
+    <!-- Appointments -->
+    ${appointments.length ? `
+    <div class="card section-gap">
+      <div class="card-header"><div class="card-title">Appointments</div></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Date</th><th>Vehicle</th><th>Type</th><th>Notes</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody>
+            ${appointments.map(apt => {
+              const car = db.cars.find(c => c.id === apt.carId);
+              const statusColors = { pending: 'badge-orange', confirmed: 'badge-green', completed: 'badge-gray', cancelled: 'badge-red' };
+              return `<tr>
+                <td>${formatDate(apt.date)}</td>
+                <td>${car ? car.make+' '+car.model : '—'}</td>
+                <td><span class="badge badge-blue">${apt.type}</span></td>
+                <td class="text-muted">${apt.notes || '—'}</td>
+                <td><span class="badge ${statusColors[apt.status]||'badge-gray'}">${apt.status}</span></td>
+                <td>
+                  ${apt.status === 'pending' ? `
+                    <button class="btn btn-success btn-sm" onclick="confirmAppointment('${apt.id}')">Confirm</button>
+                    <button class="btn btn-danger btn-sm" onclick="cancelAppointment('${apt.id}')">Decline</button>
+                  ` : apt.status === 'confirmed' ? `
+                    <button class="btn btn-secondary btn-sm" onclick="completeAppointment('${apt.id}')">Mark Done</button>
+                  ` : '—'}
+                </td>
+              </tr>`;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    ` : ''}
+
+    <!-- Service History -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Service History</div>
+        <button class="btn btn-primary btn-sm" onclick="openAddServiceModal('${cust.id}','')">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add Record
+        </button>
+      </div>
+      ${services.length ? `
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Date</th><th>Vehicle</th><th>Service Type</th><th>Description</th><th>Mileage</th><th>Price</th><th></th></tr></thead>
+            <tbody>
+              ${services.map(sv => {
+                const car = db.cars.find(c => c.id === sv.carId);
+                return `<tr>
+                  <td>${formatDate(sv.date)}</td>
+                  <td>${car ? car.make+' '+car.model : '—'}</td>
+                  <td><span class="badge badge-blue">${sv.type}</span></td>
+                  <td class="text-muted" style="max-width:240px;">${sv.description}</td>
+                  <td>${sv.mileage ? sv.mileage.toLocaleString()+' km' : '—'}</td>
+                  <td class="td-primary">RM ${sv.price}</td>
+                  <td><button class="btn btn-danger btn-sm" onclick="deleteService('${sv.id}','${cust.id}')">Delete</button></td>
+                </tr>`;
+              }).join('')}
+            </tbody>
+          </table>
+        </div>
+      ` : '<div class="empty-state">' + iconWrench() + '<div class="empty-title">No service records</div><p>Add a service record using the button above.</p></div>'}
+    </div>
+  `;
+}
+
+// ─── Admin Calendar ─────────────────────────────────────────────
+function viewAdminCalendar(state = {}) {
+  const db = getDB();
+  const now = new Date();
+  const calYear = state.calYear || now.getFullYear();
+  const calMonth = state.calMonth !== undefined ? state.calMonth : now.getMonth();
+
+  // Build events map
+  const events = {};
+  db.nextServices.forEach(ns => {
+    const d = ns.date.slice(0,10);
+    if (!events[d]) events[d] = [];
+    const cust = db.customers.find(c => c.id === ns.customerId);
+    const car = db.cars.find(c => c.id === ns.carId);
+    events[d].push({ type: 'next', label: `${ns.type}${cust?' - '+cust.name:''}`, car: car ? `${car.make} ${car.model}` : '' });
+  });
+  db.appointments.filter(a => a.status !== 'cancelled').forEach(apt => {
+    const d = apt.date.slice(0,10);
+    if (!events[d]) events[d] = [];
+    const cust = db.customers.find(c => c.id === apt.customerId);
+    events[d].push({ type: 'apt', label: `Appt: ${apt.type}${cust?' - '+cust.name:''}` });
+  });
+
+  const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const firstDay = new Date(calYear, calMonth, 1).getDay();
+  const daysInMonth = new Date(calYear, calMonth+1, 0).getDate();
+  const prevDays = new Date(calYear, calMonth, 0).getDate();
+
+  let cells = '';
+  // Day names
+  ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(d => { cells += `<div class="cal-day-name">${d}</div>`; });
+  // Prev month days
+  for(let i = firstDay - 1; i >= 0; i--) {
+    cells += `<div class="cal-day other-month"><div class="day-num">${prevDays-i}</div></div>`;
+  }
+  // Current month
+  for(let d = 1; d <= daysInMonth; d++) {
+    const dateStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isToday = d === now.getDate() && calMonth === now.getMonth() && calYear === now.getFullYear();
+    const dayEvents = events[dateStr] || [];
+    cells += `<div class="cal-day${isToday?' today':''}${dayEvents.length?' has-event':''}">
+      <div class="day-num">${d}</div>
+      ${dayEvents.slice(0,2).map(ev => `<div class="cal-event" title="${ev.label}">${ev.label}</div>`).join('')}
+      ${dayEvents.length > 2 ? `<div class="cal-event" style="background:var(--gray-100);color:var(--gray-500);">+${dayEvents.length-2} more</div>` : ''}
+    </div>`;
+  }
+  // Fill remaining
+  const total = firstDay + daysInMonth;
+  const remaining = total % 7 === 0 ? 0 : 7 - (total % 7);
+  for(let d = 1; d <= remaining; d++) cells += `<div class="cal-day other-month"><div class="day-num">${d}</div></div>`;
+
+  const prevM = calMonth === 0 ? {y:calYear-1,m:11} : {y:calYear,m:calMonth-1};
+  const nextM = calMonth === 11 ? {y:calYear+1,m:0} : {y:calYear,m:calMonth+1};
+
+  return `
+    <div class="page-header">
+      <div class="page-title">Service Calendar</div>
+      <div class="page-subtitle">Scheduled next services and appointments</div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card" style="grid-column:1/-1;">
+        <div class="card-header">
+          <div class="calendar-nav" style="flex:1;">
+            <button onclick="navigate('admin-calendar',{calYear:${prevM.y},calMonth:${prevM.m}})">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <h3>${monthNames[calMonth]} ${calYear}</h3>
+            <button onclick="navigate('admin-calendar',{calYear:${nextM.y},calMonth:${nextM.m}})">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="big-calendar cal-grid">${cells}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:20px;">
+      <div class="card-header"><div class="card-title">All Upcoming Services</div></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Customer</th><th>Vehicle</th><th>Service Type</th><th>Scheduled Date</th><th>Days Away</th><th>Notes</th></tr></thead>
+          <tbody>
+            ${db.nextServices.sort((a,b)=>new Date(a.date)-new Date(b.date)).map(ns => {
+              const cust = db.customers.find(c=>c.id===ns.customerId);
+              const car = db.cars.find(c=>c.id===ns.carId);
+              const daysAway = Math.ceil((new Date(ns.date) - new Date())/(1000*60*60*24));
+              return `<tr>
+                <td class="td-primary td-link" onclick="navigate('admin-customer-detail',{customerId:'${ns.customerId}'})">${cust ? cust.name : '—'}</td>
+                <td>${car ? car.make+' '+car.model+' ('+car.plateNumber+')' : '—'}</td>
+                <td><span class="badge badge-blue">${ns.type}</span></td>
+                <td>${formatDate(ns.date)}</td>
+                <td><span class="badge ${daysAway < 0 ? 'badge-red' : daysAway < 30 ? 'badge-orange' : 'badge-green'}">${daysAway < 0 ? 'Overdue' : daysAway+' days'}</span></td>
+                <td class="text-muted">${ns.notes||'—'}</td>
+              </tr>`;
+            }).join('') || '<tr><td colspan="6"><div class="empty-state"><p>No upcoming services scheduled.</p></div></td></tr>'}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+// ─── Admin All Services ─────────────────────────────────────────
+function viewAdminAllServices() {
+  const db = getDB();
+  const services = [...db.services].sort((a,b) => new Date(b.date)-new Date(a.date));
+  return `
+    <div class="page-header">
+      <div class="page-title">All Services</div>
+      <div class="page-subtitle">${services.length} total service records</div>
+    </div>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Date</th><th>Customer</th><th>Vehicle</th><th>Service Type</th><th>Description</th><th>Mileage</th><th>Price</th></tr></thead>
+          <tbody>
+            ${services.length ? services.map(sv => {
+              const cust = db.customers.find(c=>c.id===sv.customerId);
+              const car = db.cars.find(c=>c.id===sv.carId);
+              return `<tr>
+                <td>${formatDate(sv.date)}</td>
+                <td class="td-primary td-link" onclick="navigate('admin-customer-detail',{customerId:'${sv.customerId}'})">${cust ? cust.name : '—'}</td>
+                <td>${car ? car.make+' '+car.model : '—'}</td>
+                <td><span class="badge badge-blue">${sv.type}</span></td>
+                <td class="text-muted">${sv.description}</td>
+                <td>${sv.mileage ? sv.mileage.toLocaleString()+' km' : '—'}</td>
+                <td class="td-primary">RM ${sv.price}</td>
+              </tr>`;
+            }).join('') : '<tr><td colspan="7"><div class="empty-state"><p>No service records yet.</p></div></td></tr>'}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+// ─── Admin Team & Roles ─────────────────────────────────────────
+function viewAdminTeam() {
+  const db = getDB();
+  const teamUsers = db.users.filter(u => isAdminRole(u.role));
+  const isMaster = currentUser.role === 'master_admin';
+
+  const roleBadge = r => {
+    if (r === 'master_admin') return '<span class="badge badge-blue">Master Admin</span>';
+    if (r === 'admin') return '<span class="badge badge-green">Admin</span>';
+    return '<span class="badge badge-gray">User</span>';
+  };
+
+  const roleLabel = r => r === 'master_admin' ? 'Master Admin' : r === 'admin' ? 'Admin' : 'User';
+
+  return `
+    <div class="page-header">
+      <div class="page-title">Team & Roles</div>
+      <div class="page-subtitle">Manage portal staff accounts and access levels</div>
+    </div>
+
+    <div class="card section-gap">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Role Permissions</div>
+          <div class="card-subtitle">What each role can access</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="grid-3" style="gap:12px;">
+          <div style="border:1px solid var(--blue-200);border-radius:var(--radius-lg);padding:16px;background:var(--blue-50);">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+              ${iconShield()}
+              <span class="font-600" style="color:var(--blue-900);">Master Admin</span>
+            </div>
+            <ul style="font-size:13px;color:var(--gray-600);padding-left:16px;display:flex;flex-direction:column;gap:4px;">
+              <li>Full access to all features</li>
+              <li>Manage team members & roles</li>
+              <li>Change any password</li>
+              <li>Cannot be deleted</li>
+            </ul>
+          </div>
+          <div style="border:1px solid var(--green-100);border-radius:var(--radius-lg);padding:16px;background:var(--green-100);">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+              ${iconShield()}
+              <span class="font-600" style="color:var(--green-700);">Admin</span>
+            </div>
+            <ul style="font-size:13px;color:var(--gray-600);padding-left:16px;display:flex;flex-direction:column;gap:4px;">
+              <li>Full access to all features</li>
+              <li>Manage team members & roles</li>
+              <li>Can be removed by Master Admin</li>
+            </ul>
+          </div>
+          <div style="border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:16px;background:var(--gray-50);">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+              ${iconUsers()}
+              <span class="font-600" style="color:var(--gray-700);">User</span>
+            </div>
+            <ul style="font-size:13px;color:var(--gray-600);padding-left:16px;display:flex;flex-direction:column;gap:4px;">
+              <li>Access to customers & services</li>
+              <li>Access to calendar</li>
+              <li>No team management access</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Team Members</div>
+        <button class="btn btn-primary btn-sm" onclick="openAddTeamMemberModal()">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add Member
+        </button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Name</th><th>Username</th><th>Role</th><th>Actions</th></tr>
+          </thead>
+          <tbody>
+            ${teamUsers.map(u => {
+              const isSelf = u.id === currentUser.id;
+              const isMasterUser = u.role === 'master_admin';
+              const canDelete = isMaster && !isMasterUser && !isSelf;
+              const canChangeRole = isMaster && !isMasterUser;
+              return `<tr>
+                <td class="td-primary">${u.displayName || u.username} ${isSelf ? '<span class="badge badge-blue" style="margin-left:4px;">You</span>' : ''}</td>
+                <td class="text-muted">${u.username}</td>
+                <td>${roleBadge(u.role)}</td>
+                <td>
+                  <div style="display:flex;gap:6px;align-items:center;">
+                    ${canChangeRole ? `
+                      <select class="search-input" style="width:auto;padding:4px 8px;font-size:12px;" onchange="changeTeamMemberRole('${u.id}', this.value)">
+                        <option value="admin" ${u.role==='admin'?'selected':''}>Admin</option>
+                        <option value="user" ${u.role==='user'?'selected':''}>User</option>
+                      </select>
+                    ` : ''}
+                    <button class="btn btn-secondary btn-sm" onclick="openChangePasswordModal('${u.id}', '${u.displayName || u.username}')">Change Password</button>
+                    ${canDelete ? `<button class="btn btn-danger btn-sm" onclick="deleteTeamMember('${u.id}')">Remove</button>` : ''}
+                    ${isMasterUser && !isSelf ? '<span class="text-muted text-sm" style="font-style:italic;">Protected</span>' : ''}
+                  </div>
+                </td>
+              </tr>`;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+// ─── Customer Dashboard ─────────────────────────────────────────
+function viewCustDashboard() {
+  const db = getDB();
+  const cust = db.customers.find(c => c.id === currentUser.customerId);
+  if (!cust) return '<div class="page-header"><div class="page-title">Profile not found</div></div>';
+
+  const cars = db.cars.filter(c => c.customerId === cust.id);
+  const services = db.services.filter(s => s.customerId === cust.id).sort((a,b) => new Date(b.date)-new Date(a.date));
+  const nextServs = db.nextServices.filter(ns => ns.customerId === cust.id).sort((a,b) => new Date(a.date)-new Date(b.date));
+  const appointments = db.appointments.filter(a => a.customerId === cust.id && (a.status==='pending'||a.status==='confirmed')).sort((a,b)=>new Date(a.date)-new Date(b.date));
+  const nextSv = nextServs[0];
+
+  return `
+    <div class="page-header">
+      <div class="page-title">Welcome back, ${cust.name.split(' ')[0]}</div>
+      <div class="page-subtitle">Here's your vehicle service overview.</div>
+    </div>
+
+    ${nextSv ? buildCountdown(nextSv, db) : ''}
+
+    <div class="grid-2" style="margin-bottom:20px;">
+      <div class="stat-card">
+        <div class="stat-card-header"><div class="stat-card-label">My Vehicles</div><div class="stat-card-icon blue">${iconCar()}</div></div>
+        <div class="stat-card-value">${cars.length}</div>
+        <div class="stat-card-sub">Registered vehicles</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-header"><div class="stat-card-label">Service Records</div><div class="stat-card-icon green">${iconWrench()}</div></div>
+        <div class="stat-card-value">${services.length}</div>
+        <div class="stat-card-sub">Total services completed</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <!-- Recent services -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Recent Services</div>
+          <button class="btn btn-secondary btn-sm" onclick="navigate('cust-services')">View All</button>
+        </div>
+        ${services.slice(0,4).length ? `
+          <div class="service-list" style="padding:8px 0;">
+            ${services.slice(0,4).map(sv => {
+              const car = db.cars.find(c=>c.id===sv.carId);
+              return `<div class="service-item">
+                <div class="service-date-col"><div class="service-date">${formatDate(sv.date)}</div></div>
+                <div class="service-dot" style="margin-top:6px;"></div>
+                <div class="service-content">
+                  <div class="service-type">${sv.type}</div>
+                  <div class="service-desc">${car ? car.make+' '+car.model : '—'}</div>
+                </div>
+                <div class="service-price">RM ${sv.price}</div>
+              </div>`;
+            }).join('')}
+          </div>
+        ` : '<div class="empty-state"><p>No service records yet.</p></div>'}
+      </div>
+
+      <!-- Appointments -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Upcoming Appointments</div>
+          <button class="btn btn-primary btn-sm" onclick="navigate('cust-appointments')">Book New</button>
+        </div>
+        ${appointments.length ? `
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Date</th><th>Type</th><th>Status</th></tr></thead>
+              <tbody>
+                ${appointments.map(apt => {
+                  const statusColors = { pending: 'badge-orange', confirmed: 'badge-green' };
+                  return `<tr>
+                    <td>${formatDate(apt.date)}</td>
+                    <td><span class="badge badge-blue">${apt.type}</span></td>
+                    <td><span class="badge ${statusColors[apt.status]||'badge-gray'}">${apt.status}</span></td>
+                  </tr>`;
+                }).join('')}
+              </tbody>
+            </table>
+          </div>
+        ` : '<div class="empty-state"><p>No upcoming appointments.</p><button class="btn btn-primary btn-sm mt-2" onclick="navigate(\'cust-appointments\')">Book an Appointment</button></div>'}
+      </div>
+    </div>
+  `;
+}
+
+function buildCountdown(ns, db) {
+  const car = db.cars.find(c => c.id === ns.carId);
+  const target = new Date(ns.date);
+  const now = new Date();
+  const diff = target - now;
+  const totalDays = Math.ceil(diff / (1000*60*60*24));
+  if (totalDays < 0) {
+    return `<div class="countdown-card" style="background:linear-gradient(135deg,#7c3aed,#5b21b6);margin-bottom:24px;">
+      <div class="countdown-label">Service Overdue</div>
+      <div class="countdown-title">${ns.type} · ${car ? car.make+' '+car.model : ''}</div>
+      <div style="font-size:22px;font-weight:700;">Overdue by ${Math.abs(totalDays)} days</div>
+      <div class="countdown-date" style="margin-top:8px;">Was scheduled for ${formatDate(ns.date)}</div>
+    </div>`;
+  }
+  const days = totalDays;
+  const months = Math.floor(days / 30);
+  const remDays = days % 30;
+
+  return `<div class="countdown-card" style="margin-bottom:24px;">
+    <div class="countdown-label">Next Scheduled Service</div>
+    <div class="countdown-title">${ns.type} · ${car ? car.make+' '+car.model+' ('+car.plateNumber+')' : ''}</div>
+    <div class="countdown-units">
+      ${months > 0 ? `<div class="countdown-unit"><div class="countdown-num">${months}</div><div class="countdown-unit-label">Month${months!==1?'s':''}</div></div>` : ''}
+      <div class="countdown-unit"><div class="countdown-num">${remDays}</div><div class="countdown-unit-label">Day${remDays!==1?'s':''}</div></div>
+    </div>
+    <div class="countdown-date">Scheduled for ${formatDate(ns.date)}${ns.notes ? ' · '+ns.notes : ''}</div>
+  </div>`;
+}
+
+// ─── Customer Vehicles ──────────────────────────────────────────
+function viewCustVehicles() {
+  const db = getDB();
+  const cust = db.customers.find(c => c.id === currentUser.customerId);
+  const cars = db.cars.filter(c => c.customerId === currentUser.customerId);
+
+  return `
+    <div class="page-header">
+      <div class="page-title">My Vehicles</div>
+      <div class="page-subtitle">Your registered vehicles</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      ${cars.map(car => {
+        const services = db.services.filter(s=>s.carId===car.id).sort((a,b)=>new Date(b.date)-new Date(a.date));
+        const nextSv = db.nextServices.find(ns=>ns.carId===car.id);
+        return `<div class="card">
+          <div class="card-body">
+            <div class="car-card" style="border:none;padding:0;">
+              <div class="car-icon" style="width:60px;height:60px;">${iconCar()}</div>
+              <div class="car-info">
+                <div class="car-name" style="font-size:17px;">${car.year} ${car.make} ${car.model}</div>
+                <div class="car-plate" style="font-size:14px;">Plate No: <strong>${car.plateNumber}</strong> · ${car.color}</div>
+              </div>
+            </div>
+            <div class="divider"></div>
+            <div class="grid-2">
+              <div>
+                <div class="text-sm font-600" style="margin-bottom:8px;">Last Service</div>
+                ${services[0] ? `
+                  <div class="text-sm text-muted">${formatDate(services[0].date)}</div>
+                  <div class="text-sm" style="margin-top:2px;">${services[0].type}</div>
+                  ${services[0].mileage ? `<div class="text-sm text-muted">@ ${services[0].mileage.toLocaleString()} km</div>` : ''}
+                ` : '<div class="text-sm text-muted">No service records</div>'}
+              </div>
+              <div>
+                <div class="text-sm font-600" style="margin-bottom:8px;">Next Service Due</div>
+                ${nextSv ? `
+                  <div class="text-sm text-muted">${formatDate(nextSv.date)}</div>
+                  <div class="text-sm" style="margin-top:2px;">${nextSv.type}</div>
+                  ${nextSv.notes ? `<div class="text-sm text-muted">${nextSv.notes}</div>` : ''}
+                ` : '<div class="text-sm text-muted">Not scheduled</div>'}
+              </div>
+            </div>
+          </div>
+        </div>`;
+      }).join('') || '<div class="card"><div class="empty-state">' + iconCar() + '<div class="empty-title">No vehicles registered</div><p>Contact us to register your vehicle.</p></div></div>'}
+    </div>
+  `;
+}
+
+// ─── Customer Services ──────────────────────────────────────────
+function viewCustServices() {
+  const db = getDB();
+  const services = db.services.filter(s => s.customerId === currentUser.customerId).sort((a,b)=>new Date(b.date)-new Date(a.date));
+  const totalSpend = services.reduce((s,sv) => s + (sv.price||0), 0);
+
+  return `
+    <div class="page-header">
+      <div class="page-title">Service History</div>
+      <div class="page-subtitle">${services.length} total records · Total spend: RM ${totalSpend.toLocaleString()}</div>
+    </div>
+    <div class="card">
+      ${services.length ? `
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Date</th><th>Vehicle</th><th>Service Type</th><th>Description</th><th>Mileage</th><th>Price</th></tr></thead>
+            <tbody>
+              ${services.map(sv => {
+                const car = db.cars.find(c=>c.id===sv.carId);
+                return `<tr>
+                  <td>${formatDate(sv.date)}</td>
+                  <td>${car ? car.year+' '+car.make+' '+car.model : '—'}</td>
+                  <td><span class="badge badge-blue">${sv.type}</span></td>
+                  <td class="text-muted">${sv.description}</td>
+                  <td>${sv.mileage ? sv.mileage.toLocaleString()+' km' : '—'}</td>
+                  <td class="td-primary">RM ${sv.price}</td>
+                </tr>`;
+              }).join('')}
+            </tbody>
+          </table>
+        </div>
+      ` : `<div class="empty-state">${iconWrench()}<div class="empty-title">No service records</div><p>Your service history will appear here.</p></div>`}
+    </div>
+  `;
+}
+
+// ─── Customer Appointments ──────────────────────────────────────
+function viewCustAppointments() {
+  const db = getDB();
+  const cust = db.customers.find(c => c.id === currentUser.customerId);
+  const cars = db.cars.filter(c => c.customerId === currentUser.customerId);
+  const myApts = db.appointments.filter(a => a.customerId === currentUser.customerId).sort((a,b) => new Date(b.date)-new Date(a.date));
+
+  const serviceTypes = ['Oil Change','Brake Service','Tyre Rotation','Air Filter','Transmission Service','Battery Check','Air Conditioning','Full Service','Others'];
+
+  const carsOptions = cars.map(c => `<option value="${c.id}">${c.year} ${c.make} ${c.model} (${c.plateNumber})</option>`).join('');
+
+  return `
+    <div class="page-header">
+      <div class="page-title">Book an Appointment</div>
+      <div class="page-subtitle">Schedule your next service visit</div>
+    </div>
+
+    <div class="grid-2">
+      <!-- Booking form -->
+      <div class="card">
+        <div class="card-header"><div class="card-title">New Appointment Request</div></div>
+        <div class="card-body">
+          ${cars.length === 0 ? `<div class="empty-state">${iconCar()}<div class="empty-title">No vehicles registered</div><p>Please contact us to register your vehicle first.</p></div>` : `
+            <form id="apt-form" onsubmit="submitAppointment(event)">
+              <div class="form-group">
+                <label>Vehicle</label>
+                <select name="carId" required>${carsOptions}</select>
+              </div>
+              <div class="form-group">
+                <label>Service Type</label>
+                <select name="type" required>
+                  ${serviceTypes.map(t => `<option value="${t}">${t}</option>`).join('')}
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Preferred Date</label>
+                <input type="date" name="date" required min="${new Date().toISOString().slice(0,10)}">
+              </div>
+              <div class="form-group">
+                <label>Notes (optional)</label>
+                <textarea name="notes" placeholder="Describe any issues or special requests…"></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary btn-full" style="margin-top:8px;">Submit Appointment Request</button>
+            </form>
+          `}
+        </div>
+      </div>
+
+      <!-- Existing appointments -->
+      <div class="card">
+        <div class="card-header"><div class="card-title">My Appointments</div></div>
+        ${myApts.length ? `
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Date</th><th>Vehicle</th><th>Type</th><th>Status</th><th></th></tr></thead>
+              <tbody>
+                ${myApts.map(apt => {
+                  const car = db.cars.find(c=>c.id===apt.carId);
+                  const statusColors = { pending: 'badge-orange', confirmed: 'badge-green', completed: 'badge-gray', cancelled: 'badge-red' };
+                  return `<tr>
+                    <td>${formatDate(apt.date)}</td>
+                    <td>${car ? car.make+' '+car.model : '—'}</td>
+                    <td><span class="badge badge-blue">${apt.type}</span></td>
+                    <td><span class="badge ${statusColors[apt.status]||'badge-gray'}">${apt.status}</span></td>
+                    <td>${apt.status==='pending' ? `<button class="btn btn-danger btn-sm" onclick="cancelMyAppointment('${apt.id}')">Cancel</button>` : ''}</td>
+                  </tr>`;
+                }).join('')}
+              </tbody>
+            </table>
+          </div>
+        ` : '<div class="empty-state"><p>No appointments yet.</p></div>'}
+      </div>
+    </div>
+  `;
+}
+
+// ═══════════════════════════════════════════════════════════ ACTIONS
+
+// ─── Team Actions ────────────────────────────────────────────────
+function openAddTeamMemberModal() {
+  const body = `
+    <form id="add-team-form">
+      <div class="form-group"><label>Display Name *</label><input name="displayName" required placeholder="e.g. Sarah Lee"></div>
+      <div class="form-group"><label>Username *</label><input name="username" required placeholder="e.g. sarah.lee" autocomplete="off"></div>
+      <div class="form-group">
+        <label>Role *</label>
+        <select name="role" required>
+          <option value="admin">Admin — Full access + team management</option>
+          <option value="user" selected>User — Full access, no team management</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Password *</label><input type="password" name="password" required placeholder="Set a password" autocomplete="new-password"></div>
+    </form>
+  `;
+  openModal('Add Team Member', body, `
+    <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+    <button class="btn btn-primary" onclick="submitAddTeamMember()">Add Member</button>
+  `);
+}
+
+function submitAddTeamMember() {
+  const form = document.getElementById('add-team-form');
+  if (!form.checkValidity()) { form.reportValidity(); return; }
+  const db = getDB();
+  if (db.users.find(u => u.username === form.username.value)) {
+    alert('Username already exists. Please choose a different username.'); return;
+  }
+  db.users.push({
+    id: 'tm_' + Date.now(),
+    username: form.username.value,
+    password: form.password.value,
+    role: form.role.value,
+    displayName: form.displayName.value
+  });
+  saveDB(db); _db = db;
+  closeModal();
+  toast('Team member added.', 'success');
+  navigate('admin-team');
+}
+
+function changeTeamMemberRole(userId, newRole) {
+  const db = getDB();
+  const u = db.users.find(u => u.id === userId);
+  if (u && u.role !== 'master_admin') { u.role = newRole; saveDB(db); _db = db; }
+  toast('Role updated.', 'success');
+  navigate('admin-team');
+}
+
+function deleteTeamMember(userId) {
+  const db = getDB();
+  const u = db.users.find(u => u.id === userId);
+  if (!u || u.role === 'master_admin') { toast('Cannot remove Master Admin.', 'error'); return; }
+  if (!confirm(`Remove ${u.displayName || u.username} from the team?`)) return;
+  db.users = db.users.filter(u => u.id !== userId);
+  saveDB(db); _db = db;
+  toast('Team member removed.', 'success');
+  navigate('admin-team');
+}
+
+function openChangePasswordModal(userId, name) {
+  const isSelf = userId === currentUser.id;
+  const body = `
+    <form id="change-pw-form">
+      <p class="text-muted text-sm" style="margin-bottom:16px;">Changing password for <strong>${name}</strong>.</p>
+      ${isSelf ? `<div class="form-group"><label>Current Password *</label><input type="password" name="currentPw" required autocomplete="current-password"></div>` : ''}
+      <div class="form-group"><label>New Password *</label><input type="password" name="newPw" required placeholder="Enter new password" autocomplete="new-password"></div>
+      <div class="form-group"><label>Confirm Password *</label><input type="password" name="confirmPw" required placeholder="Confirm new password" autocomplete="new-password"></div>
+    </form>
+  `;
+  openModal('Change Password', body, `
+    <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+    <button class="btn btn-primary" onclick="submitChangePassword('${userId}', ${isSelf})">Update Password</button>
+  `);
+}
+
+function submitChangePassword(userId, isSelf) {
+  const form = document.getElementById('change-pw-form');
+  if (!form.checkValidity()) { form.reportValidity(); return; }
+  const db = getDB();
+  const u = db.users.find(u => u.id === userId);
+  if (!u) return;
+  if (isSelf && form.currentPw && u.password !== form.currentPw.value) {
+    toast('Current password is incorrect.', 'error'); return;
+  }
+  if (form.newPw.value !== form.confirmPw.value) {
+    toast('Passwords do not match.', 'error'); return;
+  }
+  u.password = form.newPw.value;
+  saveDB(db); _db = db;
+  // Update session if self
+  if (isSelf) { currentUser.password = form.newPw.value; sessionStorage.setItem('kaizen_user', JSON.stringify(currentUser)); }
+  closeModal();
+  toast('Password updated successfully.', 'success');
+}
+
+function searchCustomers(q) {
+  navigate('admin-customers', { q });
+}
+
+function submitAppointment(e) {
+  e.preventDefault();
+  const form = e.target;
+  const db = getDB();
+  const apt = {
+    id: 'apt_' + Date.now(),
+    customerId: currentUser.customerId,
+    carId: form.carId.value,
+    type: form.type.value,
+    date: form.date.value,
+    notes: form.notes.value,
+    status: 'pending',
+    createdAt: new Date().toISOString()
+  };
+  db.appointments.push(apt);
+  saveDB(db);
+  _db = db;
+  toast('Appointment request submitted!', 'success');
+  navigate('cust-appointments');
+}
+
+function cancelMyAppointment(id) {
+  const db = getDB();
+  const apt = db.appointments.find(a => a.id === id);
+  if (apt) { apt.status = 'cancelled'; saveDB(db); _db = db; }
+  toast('Appointment cancelled.', 'success');
+  navigate('cust-appointments');
+}
+
+function confirmAppointment(id) {
+  const db = getDB();
+  const apt = db.appointments.find(a => a.id === id);
+  if (apt) { apt.status = 'confirmed'; saveDB(db); _db = db; }
+  toast('Appointment confirmed.', 'success');
+  renderView(currentView, viewState);
+}
+
+function cancelAppointment(id) {
+  const db = getDB();
+  const apt = db.appointments.find(a => a.id === id);
+  if (apt) { apt.status = 'cancelled'; saveDB(db); _db = db; }
+  toast('Appointment declined.', 'success');
+  renderView(currentView, viewState);
+}
+
+function completeAppointment(id) {
+  const db = getDB();
+  const apt = db.appointments.find(a => a.id === id);
+  if (apt) { apt.status = 'completed'; saveDB(db); _db = db; }
+  toast('Appointment marked as completed.', 'success');
+  renderView(currentView, viewState);
+}
+
+function deleteCustomer(id) {
+  if (!confirm('Delete this customer and all associated data? This cannot be undone.')) return;
+  const db = getDB();
+  db.customers = db.customers.filter(c => c.id !== id);
+  db.cars = db.cars.filter(c => c.customerId !== id);
+  db.services = db.services.filter(s => s.customerId !== id);
+  db.appointments = db.appointments.filter(a => a.customerId !== id);
+  db.nextServices = db.nextServices.filter(ns => ns.customerId !== id);
+  // remove associated user
+  db.users = db.users.filter(u => u.customerId !== id);
+  saveDB(db); _db = db;
+  toast('Customer deleted.', 'success');
+  navigate('admin-customers');
+}
+
+function deleteCar(carId, custId) {
+  if (!confirm('Remove this vehicle?')) return;
+  const db = getDB();
+  db.cars = db.cars.filter(c => c.id !== carId);
+  db.services = db.services.filter(s => s.carId !== carId);
+  db.nextServices = db.nextServices.filter(ns => ns.carId !== carId);
+  saveDB(db); _db = db;
+  toast('Vehicle removed.', 'success');
+  navigate('admin-customer-detail', { customerId: custId });
+}
+
+function deleteService(serviceId, custId) {
+  if (!confirm('Delete this service record?')) return;
+  const db = getDB();
+  db.services = db.services.filter(s => s.id !== serviceId);
+  saveDB(db); _db = db;
+  toast('Service record deleted.', 'success');
+  navigate('admin-customer-detail', { customerId: custId });
+}
+
+function deleteNextService(nsId, custId) {
+  const db = getDB();
+  db.nextServices = db.nextServices.filter(ns => ns.id !== nsId);
+  saveDB(db); _db = db;
+  toast('Next service removed.', 'success');
+  navigate('admin-customer-detail', { customerId: custId });
+}
+
+// ═══════════════════════════════════════════════════════════ MODALS
+
+function openModal(title, body, footer) {
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-body').innerHTML = body;
+  document.getElementById('modal-footer').innerHTML = footer || '';
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+
+function openAddCustomerModal() {
+  const body = `
+    <form id="add-cust-form">
+      <div class="form-group"><label>Full Name *</label><input name="name" required placeholder="e.g. John Tan"></div>
+      <div class="form-row cols-2">
+        <div class="form-group"><label>Phone *</label><input name="phone" required placeholder="+60 12-345 6789"></div>
+        <div class="form-group"><label>Email *</label><input name="email" type="email" required placeholder="john@email.com"></div>
+      </div>
+      <div class="form-group"><label>Address</label><input name="address" placeholder="City, State"></div>
+    </form>
+  `;
+  openModal('Add New Customer', body, `
+    <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+    <button class="btn btn-primary" onclick="submitAddCustomer()">Add Customer</button>
+  `);
+}
+
+function submitAddCustomer() {
+  const form = document.getElementById('add-cust-form');
+  if (!form.checkValidity()) { form.reportValidity(); return; }
+  const db = getDB();
+  const id = 'c_' + Date.now();
+  db.customers.push({
+    id, name: form.name.value, phone: form.phone.value,
+    email: form.email.value, address: form.address.value,
+    createdAt: new Date().toISOString().slice(0,10)
+  });
+  saveDB(db); _db = db;
+  closeModal();
+  toast('Customer added successfully.', 'success');
+  navigate('admin-customers');
+}
+
+function openEditCustomerModal(custId) {
+  const db = getDB();
+  const cust = db.customers.find(c => c.id === custId);
+  if (!cust) return;
+  const body = `
+    <form id="edit-cust-form">
+      <div class="form-group"><label>Full Name *</label><input name="name" required value="${cust.name}"></div>
+      <div class="form-row cols-2">
+        <div class="form-group"><label>Phone *</label><input name="phone" required value="${cust.phone}"></div>
+        <div class="form-group"><label>Email *</label><input name="email" type="email" required value="${cust.email}"></div>
+      </div>
+      <div class="form-group"><label>Address</label><input name="address" value="${cust.address||''}"></div>
+    </form>
+  `;
+  openModal('Edit Customer', body, `
+    <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+    <button class="btn btn-primary" onclick="submitEditCustomer('${custId}')">Save Changes</button>
+  `);
+}
+
+function submitEditCustomer(custId) {
+  const form = document.getElementById('edit-cust-form');
+  if (!form.checkValidity()) { form.reportValidity(); return; }
+  const db = getDB();
+  const cust = db.customers.find(c => c.id === custId);
+  if (cust) {
+    cust.name = form.name.value;
+    cust.phone = form.phone.value;
+    cust.email = form.email.value;
+    cust.address = form.address.value;
+    saveDB(db); _db = db;
+  }
+  closeModal();
+  toast('Customer updated.', 'success');
+  navigate('admin-customer-detail', { customerId: custId });
+}
+
+function openAddCarModal(custId) {
+  const body = `
+    <form id="add-car-form">
+      <div class="form-row cols-2">
+        <div class="form-group"><label>Make *</label><input name="make" required placeholder="e.g. Volkswagen"></div>
+        <div class="form-group"><label>Model *</label><input name="model" required placeholder="e.g. Tiguan"></div>
+      </div>
+      <div class="form-row cols-3">
+        <div class="form-group"><label>Year *</label><input name="year" required placeholder="2021" maxlength="4"></div>
+        <div class="form-group"><label>Plate No. *</label><input name="plateNumber" required placeholder="WXY 1234" style="text-transform:uppercase;"></div>
+        <div class="form-group"><label>Color</label><input name="color" placeholder="Silver"></div>
+      </div>
+    </form>
+  `;
+  openModal('Add Vehicle', body, `
+    <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+    <button class="btn btn-primary" onclick="submitAddCar('${custId}')">Add Vehicle</button>
+  `);
+}
+
+function submitAddCar(custId) {
+  const form = document.getElementById('add-car-form');
+  if (!form.checkValidity()) { form.reportValidity(); return; }
+  const db = getDB();
+  db.cars.push({
+    id: 'car_' + Date.now(),
+    customerId: custId,
+    make: form.make.value,
+    model: form.model.value,
+    year: form.year.value,
+    plateNumber: form.plateNumber.value.toUpperCase(),
+    color: form.color.value
+  });
+  saveDB(db); _db = db;
+  closeModal();
+  toast('Vehicle added.', 'success');
+  navigate('admin-customer-detail', { customerId: custId });
+}
+
+function openAddServiceModal(custId, carId) {
+  const db = getDB();
+  const cars = db.cars.filter(c => c.customerId === custId);
+  const serviceTypes = ['Oil Change','Brake Service','Tyre Rotation','Air Filter','Transmission Service','Battery Check','Air Conditioning','Full Service','Inspection','Others'];
+
+  const body = `
+    <form id="add-svc-form">
+      <div class="form-group">
+        <label>Vehicle *</label>
+        <select name="carId" required>
+          ${cars.map(c => `<option value="${c.id}" ${c.id===carId?'selected':''}>${c.year} ${c.make} ${c.model} (${c.plateNumber})</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-row cols-2">
+        <div class="form-group">
+          <label>Service Type *</label>
+          <select name="type" required>
+            ${serviceTypes.map(t => `<option value="${t}">${t}</option>`).join('')}
+          </select>
+        </div>
+        <div class="form-group"><label>Date *</label><input type="date" name="date" required value="${new Date().toISOString().slice(0,10)}"></div>
+      </div>
+      <div class="form-group"><label>Description *</label><textarea name="description" required placeholder="Describe the service performed…"></textarea></div>
+      <div class="form-row cols-2">
+        <div class="form-group"><label>Price (RM) *</label><input type="number" name="price" required min="0" step="0.01" placeholder="0.00"></div>
+        <div class="form-group"><label>Mileage (km)</label><input type="number" name="mileage" min="0" placeholder="e.g. 45000"></div>
+      </div>
+    </form>
+  `;
+  openModal('Add Service Record', body, `
+    <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+    <button class="btn btn-primary" onclick="submitAddService('${custId}')">Save Record</button>
+  `);
+}
+
+function submitAddService(custId) {
+  const form = document.getElementById('add-svc-form');
+  if (!form.checkValidity()) { form.reportValidity(); return; }
+  const db = getDB();
+  db.services.push({
+    id: 'sv_' + Date.now(),
+    customerId: custId,
+    carId: form.carId.value,
+    type: form.type.value,
+    date: form.date.value,
+    description: form.description.value,
+    price: parseFloat(form.price.value) || 0,
+    mileage: form.mileage.value ? parseInt(form.mileage.value) : null
+  });
+  saveDB(db); _db = db;
+  closeModal();
+  toast('Service record added.', 'success');
+  navigate('admin-customer-detail', { customerId: custId });
+}
+
+function openSetNextServiceModal(custId, carId) {
+  const db = getDB();
+  const cars = db.cars.filter(c => c.customerId === custId);
+  const serviceTypes = ['Oil Change','Brake Service','Tyre Rotation','Air Filter','Transmission Service','Battery Check','Air Conditioning','Full Service','Inspection'];
+  const existing = db.nextServices.find(ns => ns.carId === carId);
+
+  const body = `
+    <form id="next-svc-form">
+      <div class="form-group">
+        <label>Vehicle *</label>
+        <select name="carId" required>
+          ${cars.map(c => `<option value="${c.id}" ${c.id===carId?'selected':''}>${c.year} ${c.make} ${c.model} (${c.plateNumber})</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-row cols-2">
+        <div class="form-group">
+          <label>Service Type *</label>
+          <select name="type" required>
+            ${serviceTypes.map(t => `<option value="${t}" ${existing&&existing.type===t?'selected':''}>${t}</option>`).join('')}
+          </select>
+        </div>
+        <div class="form-group"><label>Scheduled Date *</label><input type="date" name="date" required value="${existing ? existing.date : ''}"></div>
+      </div>
+      <div class="form-group"><label>Notes</label><input name="notes" value="${existing ? existing.notes||'' : ''}" placeholder="e.g. Due at 50,000 km"></div>
+    </form>
+  `;
+  openModal('Set Next Service Date', body, `
+    <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+    <button class="btn btn-primary" onclick="submitSetNextService('${custId}', '${carId}')">Save</button>
+  `);
+}
+
+function submitSetNextService(custId, carId) {
+  const form = document.getElementById('next-svc-form');
+  if (!form.checkValidity()) { form.reportValidity(); return; }
+  const db = getDB();
+  // Remove existing for this car
+  db.nextServices = db.nextServices.filter(ns => ns.carId !== form.carId.value);
+  db.nextServices.push({
+    id: 'ns_' + Date.now(),
+    customerId: custId,
+    carId: form.carId.value,
+    type: form.type.value,
+    date: form.date.value,
+    notes: form.notes.value
+  });
+  saveDB(db); _db = db;
+  closeModal();
+  toast('Next service date set.', 'success');
+  navigate('admin-customer-detail', { customerId: custId });
+}
+
+// ═══════════════════════════════════════════════════════════ HANDLERS
+function attachViewHandlers(view, state) {
+  // nothing extra needed, all via onclick
+}
+
+// ═══════════════════════════════════════════════════════════ TOAST
+function toast(msg, type = '') {
+  const container = document.getElementById('toast-container');
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.innerHTML = `
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      ${type==='success' ? '<polyline points="20 6 9 17 4 12"/>' : type==='error' ? '<circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>' : '<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>'}
+    </svg>
+    ${msg}
+  `;
+  container.appendChild(el);
+  setTimeout(() => {
+    el.style.animation = 'fadeOut 0.3s ease forwards';
+    setTimeout(() => el.remove(), 300);
+  }, 3000);
+}
+
+// ═══════════════════════════════════════════════════════════ UTILS
+function formatDate(dateStr) {
+  if (!dateStr) return '—';
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('en-MY', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+function uid() { return '_' + Math.random().toString(36).slice(2, 9); }
+
+// ═══════════════════════════════════════════════════════════ ICONS
+function iconShield() { return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`; }
+function iconGrid() { return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>`; }
+function iconUsers() { return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`; }
+function iconCar() { return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v9a2 2 0 0 1-2 2h-2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/><path d="M3 11h18M11 3v8"/></svg>`; }
+function iconCalendar() { return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`; }
+function iconWrench() { return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>`; }
+function iconClock() { return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`; }
+function iconMoney() { return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>`; }
+
+// ═══════════════════════════════════════════════════════════ INIT
+document.addEventListener('DOMContentLoaded', () => {
+  // Login
+  document.getElementById('login-btn').addEventListener('click', doLogin);
+  document.getElementById('login-password').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+  document.getElementById('login-username').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('login-password').focus(); });
+
+  // Logout
+  document.getElementById('logout-btn').addEventListener('click', logout);
+
+  // Modal close
+  document.getElementById('modal-close-btn').addEventListener('click', closeModal);
+  document.getElementById('modal-overlay').addEventListener('click', e => { if(e.target === document.getElementById('modal-overlay')) closeModal(); });
+
+  // Check session
+  const saved = sessionStorage.getItem('kaizen_user');
+  if (saved) {
+    try {
+      currentUser = JSON.parse(saved);
+      startApp();
+    } catch { showLogin(); }
+  } else {
+    showLogin();
+  }
+});
+
+function doLogin() {
+  const username = document.getElementById('login-username').value.trim();
+  const password = document.getElementById('login-password').value;
+  const user = login(username, password);
+  if (user) {
+    currentUser = user;
+    sessionStorage.setItem('kaizen_user', JSON.stringify(user));
+    document.getElementById('login-error').style.display = 'none';
+    startApp();
+  } else {
+    document.getElementById('login-error').style.display = 'block';
+    document.getElementById('login-password').value = '';
+    document.getElementById('login-password').focus();
+  }
+}
+
+function showLogin() {
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('app-shell').classList.remove('active');
+}
+
+function startApp() {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app-shell').classList.add('active');
+
+  // Set topbar
+  const displayName = currentUser.displayName || currentUser.username;
+  document.getElementById('topbar-avatar').textContent = displayName.charAt(0).toUpperCase();
+  document.getElementById('topbar-avatar').className = `avatar ${isAdminRole(currentUser.role) ? 'admin' : 'customer'}`;
+  document.getElementById('topbar-username').textContent = displayName;
+  const roleLabels = { master_admin: 'Master Admin', admin: 'Administrator', user: 'Staff', customer: 'Customer' };
+  document.getElementById('topbar-role').textContent = roleLabels[currentUser.role] || currentUser.role;
+
+  renderSidebar();
+
+  // Default view
+  if (isAdminRole(currentUser.role)) {
+    navigate('admin-dashboard');
+  } else {
+    navigate('cust-dashboard');
+  }
+}
+</script>
+</body>
+</html>
