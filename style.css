@@ -582,18 +582,18 @@ img {
     display: none;
   }
 
-  /* Thinner navbar on mobile */
+  /* Navbar on mobile */
   .navbar {
     padding: 8px 0;
   }
 
   .logo-img {
-    height: 40px;
+    height: 60px;
   }
 
-  /* Match hero padding-top to new navbar height */
+  /* Match hero padding-top to navbar height (60px logo + 16px padding) */
   .hero {
-    padding-top: 56px;
+    padding-top: 76px;
   }
 
   /* Show hamburger, hide inline nav */
