@@ -472,19 +472,11 @@ img {
   }
 }
 
-/* Mobile hero video */
+/* Mobile hero video — hidden on desktop */
 #hero-mobile-video {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: 1;
-  pointer-events: none;
+  display: none;
 }
 
-/* Explicitly hide video on desktop */
 @media (min-width: 769px) {
   #hero-mobile-video {
     display: none !important;
@@ -496,38 +488,58 @@ img {
     display: none;
   }
 
+  /* Hero: flex column, full screen — video on top, text below */
   .hero {
     height: 100vh;
     height: 100svh;
     min-height: unset;
-    padding-top: 0;
-    padding-bottom: 0;
-    justify-content: center;
+    padding: 0;
+    flex-direction: column;
+    justify-content: flex-start;
   }
 
+  /* Hide overlay and desktop car on mobile */
   .hero-overlay {
-    background: linear-gradient(
-      to bottom,
-      rgba(0,0,0,0.55) 0%,
-      rgba(0,0,0,0.75) 100%
-    );
+    display: none;
   }
 
-  /* Hide desktop car image on mobile */
   #motion-car {
     display: none;
   }
 
+  /* Video: inline block, full width, top portion of screen */
+  #hero-mobile-video {
+    display: block;
+    position: static;
+    width: 100%;
+    height: 55vw;
+    max-height: 55vh;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+
+  /* Text area: fills remaining space, dark background */
   .hero-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     transform: none;
-    padding: 0 0 64px;
+    padding: 28px 24px 36px;
     max-width: 100%;
     text-align: center;
+    background: var(--darker-bg);
+    width: 100%;
   }
 
   .hero h1 {
-    font-size: clamp(2rem, 9vw, 2.8rem);
+    font-size: clamp(1.8rem, 8vw, 2.6rem);
     line-height: 1.15;
+    margin-bottom: 12px;
+  }
+
+  .hero p {
+    margin-bottom: 28px;
   }
 
   .hero-buttons {
