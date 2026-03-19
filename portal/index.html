@@ -477,14 +477,20 @@
     .hidden { display: none !important; }
     .svc-type-dropdown { position: relative; }
     .svc-type-btn {
-      width: 100%; text-align: left; display: flex; justify-content: space-between; align-items: center;
-      padding: 8px 12px; border: 1px solid var(--gray-300); border-radius: 8px;
+      width: 100%; text-align: left; display: flex; justify-content: space-between; align-items: flex-start;
+      padding: 7px 10px; border: 1px solid var(--gray-300); border-radius: 8px;
       background: var(--white); cursor: pointer; font-size: 14px; color: var(--gray-700);
-      transition: border-color 0.15s;
+      transition: border-color 0.15s; min-height: 38px;
     }
     .svc-type-btn:hover { border-color: var(--blue-400); }
-    .svc-type-btn .svc-type-arrow { font-size: 11px; color: var(--gray-400); flex-shrink: 0; margin-left: 8px; }
-    .svc-type-btn .svc-type-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .svc-type-btn .svc-type-arrow { font-size: 11px; color: var(--gray-400); flex-shrink: 0; margin-left: 6px; margin-top: 3px; }
+    .svc-type-btn .svc-type-label { flex: 1; display: flex; flex-wrap: wrap; gap: 4px; }
+    .svc-tag {
+      display: inline-block; padding: 2px 9px; border-radius: 12px;
+      background: var(--blue-100); color: var(--blue-700);
+      font-size: 12px; font-weight: 500; line-height: 1.6;
+    }
+    .svc-placeholder { color: var(--gray-400); font-size: 14px; padding: 1px 0; }
     .svc-type-panel {
       display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0;
       background: var(--white); border: 1px solid var(--gray-200); border-radius: 8px;
@@ -1659,11 +1665,13 @@ function renderSvcTypeDropdown(formId, serviceTypes, selected = []) {
     const chk = selected.includes(t) ? ' checked' : '';
     return `<label><input type="checkbox" name="type" value="${t}"${chk} onchange="updateSvcLabel('${formId}')"><span>${t}</span></label>`;
   }).join('');
-  const labelText = selected.length ? selected.join(', ') : 'Select service types…';
+  const tagsHtml = selected.length
+    ? selected.map(t => `<span class="svc-tag">${t}</span>`).join('')
+    : '<span class="svc-placeholder">Select service types…</span>';
   return `
     <div class="svc-type-dropdown" id="svcDropdown_${formId}">
       <button type="button" class="svc-type-btn" onclick="toggleSvcDropdown('${formId}')">
-        <span class="svc-type-label" id="svcLabel_${formId}">${labelText}</span>
+        <span class="svc-type-label" id="svcLabel_${formId}">${tagsHtml}</span>
         <span class="svc-type-arrow">▾</span>
       </button>
       <div class="svc-type-panel" id="svcPanel_${formId}">${items}</div>
@@ -1691,7 +1699,10 @@ function toggleSvcDropdown(formId) {
 function updateSvcLabel(formId) {
   const panel = document.getElementById('svcPanel_' + formId);
   const checked = [...panel.querySelectorAll('input:checked')].map(cb => cb.value);
-  document.getElementById('svcLabel_' + formId).textContent = checked.length ? checked.join(', ') : 'Select service types…';
+  const label = document.getElementById('svcLabel_' + formId);
+  label.innerHTML = checked.length
+    ? checked.map(t => `<span class="svc-tag">${t}</span>`).join('')
+    : '<span class="svc-placeholder">Select service types…</span>';
 }
 
 // ─── Customer Appointments ──────────────────────────────────────
