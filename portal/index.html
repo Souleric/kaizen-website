@@ -616,7 +616,17 @@ const INITIAL_DATA = {
   nextServices: [
     { id: 'ns1', customerId: 'c1', carId: 'car1', date: '2026-06-10', type: 'Oil Change', notes: 'Due at approximately 50,000 km' }
   ],
-  serviceTypes: ['Oil Change','Brake Service','Tyre Rotation','Air Filter','Transmission Service','Battery Check','Air Conditioning','Full Service','Inspection','Others']
+  serviceTypes: ['Oil Change','Brake Service','Tyre Rotation','Air Filter','Transmission Service','Battery Check','Air Conditioning','Full Service','Inspection','Others'],
+  carModels: [
+    { id: 'cm1', brand: 'Toyota', model: 'Camry' },
+    { id: 'cm2', brand: 'Toyota', model: 'Vios' },
+    { id: 'cm3', brand: 'Honda', model: 'Civic' },
+    { id: 'cm4', brand: 'Honda', model: 'HR-V' },
+    { id: 'cm5', brand: 'Perodua', model: 'Myvi' },
+    { id: 'cm6', brand: 'Perodua', model: 'Axia' },
+    { id: 'cm7', brand: 'Proton', model: 'X50' },
+    { id: 'cm8', brand: 'Volkswagen', model: 'Tiguan' }
+  ]
 };
 
 function loadDB() {
@@ -636,6 +646,20 @@ let _db = loadDB();
 // Migrate: ensure serviceTypes array exists
 if (!_db.serviceTypes) {
   _db.serviceTypes = ['Oil Change','Brake Service','Tyre Rotation','Air Filter','Transmission Service','Battery Check','Air Conditioning','Full Service','Inspection','Others'];
+  saveDB(_db);
+}
+// Migrate: ensure carModels array exists
+if (!_db.carModels) {
+  _db.carModels = [
+    { id: 'cm1', brand: 'Toyota', model: 'Camry' },
+    { id: 'cm2', brand: 'Toyota', model: 'Vios' },
+    { id: 'cm3', brand: 'Honda', model: 'Civic' },
+    { id: 'cm4', brand: 'Honda', model: 'HR-V' },
+    { id: 'cm5', brand: 'Perodua', model: 'Myvi' },
+    { id: 'cm6', brand: 'Perodua', model: 'Axia' },
+    { id: 'cm7', brand: 'Proton', model: 'X50' },
+    { id: 'cm8', brand: 'Volkswagen', model: 'Tiguan' }
+  ];
   saveDB(_db);
 }
 // Ensure master admin and cust exist; upgrade legacy 'admin' role to 'master_admin'
@@ -1050,6 +1074,7 @@ function viewAdminCustomerDetail(state = {}) {
             <div class="car-actions">
               <button class="btn btn-primary btn-sm" onclick="openAddServiceModal('${cust.id}','${car.id}')">Add Service</button>
               <button class="btn btn-secondary btn-sm" onclick="openSetNextServiceModal('${cust.id}','${car.id}')">Set Next Service</button>
+              <button class="btn btn-secondary btn-sm" onclick="openEditCarModal('${car.id}','${cust.id}')">Edit</button>
               <button class="btn btn-danger btn-sm" onclick="deleteCar('${car.id}','${cust.id}')">Remove</button>
             </div>
           </div>`;
@@ -1297,29 +1322,76 @@ function viewAdminAllServices() {
 function viewAdminSettings() {
   const db = getDB();
   const types = db.serviceTypes || [];
+  const carModels = db.carModels || [];
+  // Group car models by brand
+  const brands = [...new Set(carModels.map(m => m.brand))].sort();
+
   return `
     <div class="page-header">
       <div class="page-title">Settings</div>
-      <div class="page-subtitle">Manage service types available across the portal</div>
+      <div class="page-subtitle">Manage service types and car models</div>
     </div>
-    <div class="card" style="max-width:560px;">
-      <div class="card-header">
-        <div class="card-title">Service Types</div>
+    <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start;">
+
+      <!-- Service Types -->
+      <div class="card" style="flex:1;min-width:280px;max-width:480px;">
+        <div class="card-header"><div class="card-title">Service Types</div></div>
+        <div class="card-body">
+          <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">
+            ${types.length ? types.map(t => `
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 12px;border:1px solid var(--gray-200);border-radius:8px;background:var(--gray-50);">
+                <span style="font-size:14px;font-weight:500;color:var(--gray-800);">${t}</span>
+                <button class="btn btn-danger btn-sm" onclick="deleteServiceType('${t.replace(/'/g,"\\'")}')">Remove</button>
+              </div>
+            `).join('') : '<p style="color:var(--gray-500);font-size:14px;">No service types yet.</p>'}
+          </div>
+          <div style="display:flex;gap:8px;">
+            <input id="new-svc-type-input" type="text" placeholder="e.g. Wheel Alignment" style="flex:1;" onkeydown="if(event.key==='Enter'){event.preventDefault();submitAddServiceType();}">
+            <button class="btn btn-primary" onclick="submitAddServiceType()">Add</button>
+          </div>
+        </div>
       </div>
-      <div class="card-body">
-        <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;" id="svc-type-list">
-          ${types.length ? types.map(t => `
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 12px;border:1px solid var(--gray-200);border-radius:8px;background:var(--gray-50);">
-              <span style="font-size:14px;font-weight:500;color:var(--gray-800);">${t}</span>
-              <button class="btn btn-danger btn-sm" onclick="deleteServiceType('${t.replace(/'/g,"\\'")}')">Remove</button>
+
+      <!-- Car Models -->
+      <div class="card" style="flex:1;min-width:280px;max-width:480px;">
+        <div class="card-header"><div class="card-title">Car Models</div></div>
+        <div class="card-body">
+          <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:16px;">
+            ${brands.length ? brands.map(brand => `
+              <div>
+                <div style="font-size:11px;font-weight:600;color:var(--gray-500);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">${brand}</div>
+                <div style="display:flex;flex-direction:column;gap:4px;">
+                  ${carModels.filter(m => m.brand === brand).map(m => `
+                    <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border:1px solid var(--gray-200);border-radius:8px;background:var(--gray-50);">
+                      <div>
+                        <span style="font-size:14px;font-weight:500;color:var(--gray-800);">${m.model}</span>
+                        ${m.year ? `<span style="font-size:12px;color:var(--gray-500);margin-left:8px;">${m.year}</span>` : ''}
+                        ${m.liter ? `<span style="font-size:12px;color:var(--gray-500);margin-left:4px;">${m.liter}L</span>` : ''}
+                      </div>
+                      <button class="btn btn-danger btn-sm" onclick="deleteCarModel('${m.id}')">Remove</button>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            `).join('') : '<p style="color:var(--gray-500);font-size:14px;">No car models yet.</p>'}
+          </div>
+          <div style="border-top:1px solid var(--gray-200);padding-top:14px;">
+            <div style="font-size:12px;font-weight:600;color:var(--gray-600);margin-bottom:10px;">Add Car Model</div>
+            <div class="form-row cols-2" style="margin-bottom:8px;">
+              <div class="form-group" style="margin:0;"><label>Brand *</label><input id="new-car-brand" placeholder="e.g. Toyota" list="brand-suggestions">
+                <datalist id="brand-suggestions">${brands.map(b=>`<option value="${b}">`).join('')}</datalist>
+              </div>
+              <div class="form-group" style="margin:0;"><label>Model *</label><input id="new-car-model" placeholder="e.g. Camry"></div>
             </div>
-          `).join('') : '<p style="color:var(--gray-500);font-size:14px;">No service types yet.</p>'}
-        </div>
-        <div style="display:flex;gap:8px;">
-          <input id="new-svc-type-input" type="text" placeholder="e.g. Wheel Alignment" style="flex:1;" onkeydown="if(event.key==='Enter'){event.preventDefault();submitAddServiceType();}">
-          <button class="btn btn-primary" onclick="submitAddServiceType()">Add</button>
+            <div class="form-row cols-2" style="margin-bottom:12px;">
+              <div class="form-group" style="margin:0;"><label>Year <span style="font-weight:400;color:var(--gray-400);">(optional)</span></label><input id="new-car-year" placeholder="e.g. 2023" maxlength="4"></div>
+              <div class="form-group" style="margin:0;"><label>Engine (L) <span style="font-weight:400;color:var(--gray-400);">(optional)</span></label><input id="new-car-liter" placeholder="e.g. 1.5" type="number" step="0.1" min="0.5" max="10"></div>
+            </div>
+            <button class="btn btn-primary btn-full" onclick="submitAddCarModel()">Add Car Model</button>
+          </div>
         </div>
       </div>
+
     </div>
   `;
 }
@@ -1344,6 +1416,28 @@ function deleteServiceType(type) {
   db.serviceTypes = (db.serviceTypes || []).filter(t => t !== type);
   saveDB(db); _db = db;
   toast('Service type removed.', 'success');
+  navigate('admin-settings');
+}
+
+function submitAddCarModel() {
+  const brand = document.getElementById('new-car-brand').value.trim();
+  const model = document.getElementById('new-car-model').value.trim();
+  const year  = document.getElementById('new-car-year').value.trim();
+  const liter = document.getElementById('new-car-liter').value.trim();
+  if (!brand || !model) { toast('Brand and model are required.', 'error'); return; }
+  const db = getDB();
+  if (!db.carModels) db.carModels = [];
+  db.carModels.push({ id: 'cm_' + Date.now(), brand, model, year: year || null, liter: liter || null });
+  saveDB(db); _db = db;
+  toast('Car model added.', 'success');
+  navigate('admin-settings');
+}
+
+function deleteCarModel(id) {
+  const db = getDB();
+  db.carModels = (db.carModels || []).filter(m => m.id !== id);
+  saveDB(db); _db = db;
+  toast('Car model removed.', 'success');
   navigate('admin-settings');
 }
 
@@ -2063,28 +2157,56 @@ function submitEditCustomer(custId) {
   navigate('admin-customer-detail', { customerId: custId });
 }
 
-function openAddCarModal(custId) {
-  const body = `
-    <form id="add-car-form">
+function buildCarFormBody(car) {
+  const db = getDB();
+  const carModels = db.carModels || [];
+  const brands = [...new Set(carModels.map(m => m.brand))].sort();
+  const selectedBrand = car ? car.make : '';
+  const brandModels = selectedBrand ? carModels.filter(m => m.brand === selectedBrand) : [];
+  return `
+    <form id="car-form">
       <div class="form-row cols-2">
-        <div class="form-group"><label>Make *</label><input name="make" required placeholder="e.g. Volkswagen"></div>
-        <div class="form-group"><label>Model *</label><input name="model" required placeholder="e.g. Tiguan"></div>
+        <div class="form-group">
+          <label>Brand *</label>
+          <select name="make" required onchange="onCarBrandChange(this.value)">
+            <option value="">Select brand…</option>
+            ${brands.map(b => `<option value="${b}" ${b===selectedBrand?'selected':''}>${b}</option>`).join('')}
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Model *</label>
+          <select name="model" id="car-model-select" required>
+            <option value="">Select model…</option>
+            ${brandModels.map(m => `<option value="${m.model}" ${car&&car.model===m.model?'selected':''}>${m.model}${m.year?' ('+m.year+')':''}${m.liter?' '+m.liter+'L':''}</option>`).join('')}
+          </select>
+        </div>
       </div>
       <div class="form-row cols-3">
-        <div class="form-group"><label>Year *</label><input name="year" required placeholder="2021" maxlength="4"></div>
-        <div class="form-group"><label>Plate No. *</label><input name="plateNumber" required placeholder="WXY 1234" style="text-transform:uppercase;"></div>
-        <div class="form-group"><label>Color</label><input name="color" placeholder="Silver"></div>
+        <div class="form-group"><label>Year</label><input name="year" placeholder="2021" maxlength="4" value="${car&&car.year?car.year:''}"></div>
+        <div class="form-group"><label>Plate No. *</label><input name="plateNumber" required placeholder="WXY 1234" style="text-transform:uppercase;" value="${car?car.plateNumber:''}"></div>
+        <div class="form-group"><label>Color</label><input name="color" placeholder="Silver" value="${car?car.color||'':''}"></div>
       </div>
     </form>
   `;
-  openModal('Add Vehicle', body, `
+}
+
+function onCarBrandChange(brand) {
+  const db = getDB();
+  const models = (db.carModels || []).filter(m => m.brand === brand);
+  const sel = document.getElementById('car-model-select');
+  sel.innerHTML = '<option value="">Select model…</option>' +
+    models.map(m => `<option value="${m.model}">${m.model}${m.year?' ('+m.year+')':''}${m.liter?' '+m.liter+'L':''}</option>`).join('');
+}
+
+function openAddCarModal(custId) {
+  openModal('Add Vehicle', buildCarFormBody(null), `
     <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
     <button class="btn btn-primary" onclick="submitAddCar('${custId}')">Add Vehicle</button>
   `);
 }
 
 function submitAddCar(custId) {
-  const form = document.getElementById('add-car-form');
+  const form = document.getElementById('car-form');
   if (!form.checkValidity()) { form.reportValidity(); return; }
   const db = getDB();
   db.cars.push({
@@ -2099,6 +2221,33 @@ function submitAddCar(custId) {
   saveDB(db); _db = db;
   closeModal();
   toast('Vehicle added.', 'success');
+  navigate('admin-customer-detail', { customerId: custId });
+}
+
+function openEditCarModal(carId, custId) {
+  const db = getDB();
+  const car = db.cars.find(c => c.id === carId);
+  if (!car) return;
+  openModal('Edit Vehicle', buildCarFormBody(car), `
+    <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+    <button class="btn btn-primary" onclick="submitEditCar('${carId}','${custId}')">Save Changes</button>
+  `);
+}
+
+function submitEditCar(carId, custId) {
+  const form = document.getElementById('car-form');
+  if (!form.checkValidity()) { form.reportValidity(); return; }
+  const db = getDB();
+  const car = db.cars.find(c => c.id === carId);
+  if (!car) return;
+  car.make = form.make.value;
+  car.model = form.model.value;
+  car.year = form.year.value;
+  car.plateNumber = form.plateNumber.value.toUpperCase();
+  car.color = form.color.value;
+  saveDB(db); _db = db;
+  closeModal();
+  toast('Vehicle updated.', 'success');
   navigate('admin-customer-detail', { customerId: custId });
 }
 
