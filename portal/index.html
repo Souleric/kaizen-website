@@ -475,22 +475,31 @@
     .text-muted { color: var(--gray-500); }
     .font-600 { font-weight: 600; }
     .hidden { display: none !important; }
-    .checkbox-pill-group { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px 0 4px; }
-    .checkbox-pill-group label {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 6px 12px; border-radius: 20px;
-      border: 1px solid var(--gray-300); background: var(--white);
-      font-size: 13px; font-weight: 500; color: var(--gray-700);
-      cursor: pointer; transition: all 0.15s; user-select: none;
+    .svc-type-dropdown { position: relative; }
+    .svc-type-btn {
+      width: 100%; text-align: left; display: flex; justify-content: space-between; align-items: center;
+      padding: 8px 12px; border: 1px solid var(--gray-300); border-radius: 8px;
+      background: var(--white); cursor: pointer; font-size: 14px; color: var(--gray-700);
+      transition: border-color 0.15s;
     }
-    .checkbox-pill-group label:hover { border-color: var(--blue-500); color: var(--blue-600); }
-    .checkbox-pill-group input[type="checkbox"] { display: none; }
-    .checkbox-pill-group input[type="checkbox"]:checked + span {
-      /* handled by parent label below */
+    .svc-type-btn:hover { border-color: var(--blue-400); }
+    .svc-type-btn .svc-type-arrow { font-size: 11px; color: var(--gray-400); flex-shrink: 0; margin-left: 8px; }
+    .svc-type-btn .svc-type-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .svc-type-panel {
+      display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+      background: var(--white); border: 1px solid var(--gray-200); border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.12); z-index: 200; padding: 6px;
+      max-height: 220px; overflow-y: auto;
     }
-    .checkbox-pill-group label:has(input:checked) {
-      background: var(--blue-100); border-color: var(--blue-500); color: var(--blue-700);
+    .svc-type-panel.open { display: block; }
+    .svc-type-panel label {
+      display: flex; align-items: center; gap: 8px;
+      padding: 7px 10px; border-radius: 6px; cursor: pointer;
+      font-size: 13px; color: var(--gray-700); user-select: none;
     }
+    .svc-type-panel label:hover { background: var(--gray-50); }
+    .svc-type-panel input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--blue-500); cursor: pointer; flex-shrink: 0; }
+    .svc-type-panel label:has(input:checked) { background: var(--blue-50); color: var(--blue-700); font-weight: 500; }
   </style>
 </head>
 <body>
@@ -600,7 +609,8 @@ const INITIAL_DATA = {
   appointments: [],
   nextServices: [
     { id: 'ns1', customerId: 'c1', carId: 'car1', date: '2026-06-10', type: 'Oil Change', notes: 'Due at approximately 50,000 km' }
-  ]
+  ],
+  serviceTypes: ['Oil Change','Brake Service','Tyre Rotation','Air Filter','Transmission Service','Battery Check','Air Conditioning','Full Service','Inspection','Others']
 };
 
 function loadDB() {
@@ -617,6 +627,11 @@ function saveDB(db) {
 function getDB() { return _db; }
 
 let _db = loadDB();
+// Migrate: ensure serviceTypes array exists
+if (!_db.serviceTypes) {
+  _db.serviceTypes = ['Oil Change','Brake Service','Tyre Rotation','Air Filter','Transmission Service','Battery Check','Air Conditioning','Full Service','Inspection','Others'];
+  saveDB(_db);
+}
 // Ensure master admin and cust exist; upgrade legacy 'admin' role to 'master_admin'
 const adminUser = _db.users.find(u => u.username === 'admin');
 const custExists = _db.users.find(u => u.username === 'cust');
@@ -665,10 +680,11 @@ function getAdminNav() {
     ]},
     { section: 'Settings', items: [
       { id: 'admin-all-services', label: 'All Services', icon: iconWrench() },
+      { id: 'admin-settings', label: 'Settings', icon: iconGear() },
     ]}
   ];
   if (canManageTeam(currentUser.role)) {
-    base[1].items.push({ id: 'admin-team', label: 'Team & Roles', icon: iconShield() });
+    base[1].items.splice(1, 0, { id: 'admin-team', label: 'Team & Roles', icon: iconShield() });
   }
   return base;
 }
@@ -714,6 +730,7 @@ function renderView(view, state) {
     'admin-calendar': 'Service Calendar',
     'admin-all-services': 'All Services',
     'admin-team': 'Team & Roles',
+    'admin-settings': 'Settings',
     'cust-dashboard': 'Dashboard',
     'cust-vehicles': 'My Vehicles',
     'cust-services': 'Service History',
@@ -729,6 +746,7 @@ function renderView(view, state) {
     case 'admin-calendar': main.innerHTML = viewAdminCalendar(state); break;
     case 'admin-all-services': main.innerHTML = viewAdminAllServices(); break;
     case 'admin-team': main.innerHTML = canManageTeam(currentUser.role) ? viewAdminTeam() : viewAdminDashboard(); break;
+    case 'admin-settings': main.innerHTML = isAdminRole(currentUser.role) ? viewAdminSettings() : viewAdminDashboard(); break;
     case 'cust-dashboard': main.innerHTML = viewCustDashboard(); break;
     case 'cust-vehicles': main.innerHTML = viewCustVehicles(); break;
     case 'cust-services': main.innerHTML = viewCustServices(); break;
@@ -1270,6 +1288,59 @@ function viewAdminAllServices() {
 }
 
 // ─── Admin Team & Roles ─────────────────────────────────────────
+function viewAdminSettings() {
+  const db = getDB();
+  const types = db.serviceTypes || [];
+  return `
+    <div class="page-header">
+      <div class="page-title">Settings</div>
+      <div class="page-subtitle">Manage service types available across the portal</div>
+    </div>
+    <div class="card" style="max-width:560px;">
+      <div class="card-header">
+        <div class="card-title">Service Types</div>
+      </div>
+      <div class="card-body">
+        <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;" id="svc-type-list">
+          ${types.length ? types.map(t => `
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 12px;border:1px solid var(--gray-200);border-radius:8px;background:var(--gray-50);">
+              <span style="font-size:14px;font-weight:500;color:var(--gray-800);">${t}</span>
+              <button class="btn btn-danger btn-sm" onclick="deleteServiceType('${t.replace(/'/g,"\\'")}')">Remove</button>
+            </div>
+          `).join('') : '<p style="color:var(--gray-500);font-size:14px;">No service types yet.</p>'}
+        </div>
+        <div style="display:flex;gap:8px;">
+          <input id="new-svc-type-input" type="text" placeholder="e.g. Wheel Alignment" style="flex:1;" onkeydown="if(event.key==='Enter'){event.preventDefault();submitAddServiceType();}">
+          <button class="btn btn-primary" onclick="submitAddServiceType()">Add</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function submitAddServiceType() {
+  const input = document.getElementById('new-svc-type-input');
+  const val = input.value.trim();
+  if (!val) return;
+  const db = getDB();
+  if (!db.serviceTypes) db.serviceTypes = [];
+  if (db.serviceTypes.find(t => t.toLowerCase() === val.toLowerCase())) {
+    toast('Service type already exists.', 'error'); return;
+  }
+  db.serviceTypes.push(val);
+  saveDB(db); _db = db;
+  toast('Service type added.', 'success');
+  navigate('admin-settings');
+}
+
+function deleteServiceType(type) {
+  const db = getDB();
+  db.serviceTypes = (db.serviceTypes || []).filter(t => t !== type);
+  saveDB(db); _db = db;
+  toast('Service type removed.', 'success');
+  navigate('admin-settings');
+}
+
 function viewAdminTeam() {
   const db = getDB();
   const teamUsers = db.users.filter(u => isAdminRole(u.role));
@@ -1582,6 +1653,47 @@ function viewCustServices() {
   `;
 }
 
+// ─── Service Type Dropdown Helper ───────────────────────────────
+function renderSvcTypeDropdown(formId, serviceTypes, selected = []) {
+  const items = serviceTypes.map(t => {
+    const chk = selected.includes(t) ? ' checked' : '';
+    return `<label><input type="checkbox" name="type" value="${t}"${chk} onchange="updateSvcLabel('${formId}')"><span>${t}</span></label>`;
+  }).join('');
+  const labelText = selected.length ? selected.join(', ') : 'Select service types…';
+  return `
+    <div class="svc-type-dropdown" id="svcDropdown_${formId}">
+      <button type="button" class="svc-type-btn" onclick="toggleSvcDropdown('${formId}')">
+        <span class="svc-type-label" id="svcLabel_${formId}">${labelText}</span>
+        <span class="svc-type-arrow">▾</span>
+      </button>
+      <div class="svc-type-panel" id="svcPanel_${formId}">${items}</div>
+    </div>`;
+}
+
+function toggleSvcDropdown(formId) {
+  const panel = document.getElementById('svcPanel_' + formId);
+  const isOpen = panel.classList.contains('open');
+  // Close all open panels first
+  document.querySelectorAll('.svc-type-panel.open').forEach(p => p.classList.remove('open'));
+  if (!isOpen) {
+    panel.classList.add('open');
+    setTimeout(() => {
+      document.addEventListener('click', function handler(e) {
+        if (!panel.closest('.svc-type-dropdown').contains(e.target)) {
+          panel.classList.remove('open');
+          document.removeEventListener('click', handler);
+        }
+      });
+    }, 0);
+  }
+}
+
+function updateSvcLabel(formId) {
+  const panel = document.getElementById('svcPanel_' + formId);
+  const checked = [...panel.querySelectorAll('input:checked')].map(cb => cb.value);
+  document.getElementById('svcLabel_' + formId).textContent = checked.length ? checked.join(', ') : 'Select service types…';
+}
+
 // ─── Customer Appointments ──────────────────────────────────────
 function viewCustAppointments() {
   const db = getDB();
@@ -1589,7 +1701,7 @@ function viewCustAppointments() {
   const cars = db.cars.filter(c => c.customerId === currentUser.customerId);
   const myApts = db.appointments.filter(a => a.customerId === currentUser.customerId).sort((a,b) => new Date(b.date)-new Date(a.date));
 
-  const serviceTypes = ['Oil Change','Brake Service','Tyre Rotation','Air Filter','Transmission Service','Battery Check','Air Conditioning','Full Service','Others'];
+  const serviceTypes = (getDB().serviceTypes || []);
 
   const carsOptions = cars.map(c => `<option value="${c.id}">${c.year} ${c.make} ${c.model} (${c.plateNumber})</option>`).join('');
 
@@ -1612,9 +1724,7 @@ function viewCustAppointments() {
               </div>
               <div class="form-group">
                 <label>Service Type</label>
-                <div class="checkbox-pill-group">
-                  ${serviceTypes.map(t => `<label><input type="checkbox" name="type" value="${t}"><span>${t}</span></label>`).join('')}
-                </div>
+                ${renderSvcTypeDropdown('apt', serviceTypes)}
               </div>
               <div class="form-group">
                 <label>Preferred Date</label>
@@ -1984,7 +2094,7 @@ function submitAddCar(custId) {
 function openAddServiceModal(custId, carId) {
   const db = getDB();
   const cars = db.cars.filter(c => c.customerId === custId);
-  const serviceTypes = ['Oil Change','Brake Service','Tyre Rotation','Air Filter','Transmission Service','Battery Check','Air Conditioning','Full Service','Inspection','Others'];
+  const serviceTypes = db.serviceTypes || [];
 
   const body = `
     <form id="add-svc-form">
@@ -1997,9 +2107,7 @@ function openAddServiceModal(custId, carId) {
       <div class="form-row cols-2">
         <div class="form-group">
           <label>Service Type *</label>
-          <div class="checkbox-pill-group">
-            ${serviceTypes.map(t => `<label><input type="checkbox" name="type" value="${t}"><span>${t}</span></label>`).join('')}
-          </div>
+          ${renderSvcTypeDropdown('addsvc', serviceTypes)}
         </div>
         <div class="form-group"><label>Date *</label><input type="date" name="date" required value="${new Date().toISOString().slice(0,10)}"></div>
       </div>
@@ -2041,8 +2149,9 @@ function submitAddService(custId) {
 function openSetNextServiceModal(custId, carId) {
   const db = getDB();
   const cars = db.cars.filter(c => c.customerId === custId);
-  const serviceTypes = ['Oil Change','Brake Service','Tyre Rotation','Air Filter','Transmission Service','Battery Check','Air Conditioning','Full Service','Inspection'];
+  const serviceTypes = db.serviceTypes || [];
   const existing = db.nextServices.find(ns => ns.carId === carId);
+  const preSelected = existing && existing.type ? existing.type.split(', ') : [];
 
   const body = `
     <form id="next-svc-form">
@@ -2055,9 +2164,7 @@ function openSetNextServiceModal(custId, carId) {
       <div class="form-row cols-2">
         <div class="form-group">
           <label>Service Type *</label>
-          <div class="checkbox-pill-group">
-            ${serviceTypes.map(t => { const sel = existing && existing.type && existing.type.split(', ').includes(t); return `<label><input type="checkbox" name="type" value="${t}"${sel?' checked':''}><span>${t}</span></label>`; }).join('')}
-          </div>
+          ${renderSvcTypeDropdown('nextsvc', serviceTypes, preSelected)}
         </div>
         <div class="form-group"><label>Scheduled Date *</label><input type="date" name="date" required value="${existing ? existing.date : ''}"></div>
       </div>
@@ -2133,6 +2240,7 @@ function iconCalendar() { return `<svg width="16" height="16" viewBox="0 0 24 24
 function iconWrench() { return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>`; }
 function iconClock() { return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`; }
 function iconMoney() { return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>`; }
+function iconGear() { return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`; }
 
 // ═══════════════════════════════════════════════════════════ INIT
 document.addEventListener('DOMContentLoaded', () => {
