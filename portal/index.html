@@ -475,6 +475,22 @@
     .text-muted { color: var(--gray-500); }
     .font-600 { font-weight: 600; }
     .hidden { display: none !important; }
+    .checkbox-pill-group { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px 0 4px; }
+    .checkbox-pill-group label {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 12px; border-radius: 20px;
+      border: 1px solid var(--gray-300); background: var(--white);
+      font-size: 13px; font-weight: 500; color: var(--gray-700);
+      cursor: pointer; transition: all 0.15s; user-select: none;
+    }
+    .checkbox-pill-group label:hover { border-color: var(--blue-500); color: var(--blue-600); }
+    .checkbox-pill-group input[type="checkbox"] { display: none; }
+    .checkbox-pill-group input[type="checkbox"]:checked + span {
+      /* handled by parent label below */
+    }
+    .checkbox-pill-group label:has(input:checked) {
+      background: var(--blue-100); border-color: var(--blue-500); color: var(--blue-700);
+    }
   </style>
 </head>
 <body>
@@ -1596,9 +1612,9 @@ function viewCustAppointments() {
               </div>
               <div class="form-group">
                 <label>Service Type</label>
-                <select name="type" required>
-                  ${serviceTypes.map(t => `<option value="${t}">${t}</option>`).join('')}
-                </select>
+                <div class="checkbox-pill-group">
+                  ${serviceTypes.map(t => `<label><input type="checkbox" name="type" value="${t}"><span>${t}</span></label>`).join('')}
+                </div>
               </div>
               <div class="form-group">
                 <label>Preferred Date</label>
@@ -1749,11 +1765,13 @@ function submitAppointment(e) {
   e.preventDefault();
   const form = e.target;
   const db = getDB();
+  const selectedTypes = [...form.querySelectorAll('input[name="type"]:checked')].map(cb => cb.value);
+  if (!selectedTypes.length) { toast('Please select at least one service type.', 'error'); return; }
   const apt = {
     id: 'apt_' + Date.now(),
     customerId: currentUser.customerId,
     carId: form.carId.value,
-    type: form.type.value,
+    type: selectedTypes.join(', '),
     date: form.date.value,
     notes: form.notes.value,
     status: 'pending',
@@ -1979,9 +1997,9 @@ function openAddServiceModal(custId, carId) {
       <div class="form-row cols-2">
         <div class="form-group">
           <label>Service Type *</label>
-          <select name="type" required>
-            ${serviceTypes.map(t => `<option value="${t}">${t}</option>`).join('')}
-          </select>
+          <div class="checkbox-pill-group">
+            ${serviceTypes.map(t => `<label><input type="checkbox" name="type" value="${t}"><span>${t}</span></label>`).join('')}
+          </div>
         </div>
         <div class="form-group"><label>Date *</label><input type="date" name="date" required value="${new Date().toISOString().slice(0,10)}"></div>
       </div>
@@ -2001,12 +2019,14 @@ function openAddServiceModal(custId, carId) {
 function submitAddService(custId) {
   const form = document.getElementById('add-svc-form');
   if (!form.checkValidity()) { form.reportValidity(); return; }
+  const selectedTypes = [...form.querySelectorAll('input[name="type"]:checked')].map(cb => cb.value);
+  if (!selectedTypes.length) { toast('Please select at least one service type.', 'error'); return; }
   const db = getDB();
   db.services.push({
     id: 'sv_' + Date.now(),
     customerId: custId,
     carId: form.carId.value,
-    type: form.type.value,
+    type: selectedTypes.join(', '),
     date: form.date.value,
     description: form.description.value,
     price: parseFloat(form.price.value) || 0,
@@ -2035,9 +2055,9 @@ function openSetNextServiceModal(custId, carId) {
       <div class="form-row cols-2">
         <div class="form-group">
           <label>Service Type *</label>
-          <select name="type" required>
-            ${serviceTypes.map(t => `<option value="${t}" ${existing&&existing.type===t?'selected':''}>${t}</option>`).join('')}
-          </select>
+          <div class="checkbox-pill-group">
+            ${serviceTypes.map(t => { const sel = existing && existing.type && existing.type.split(', ').includes(t); return `<label><input type="checkbox" name="type" value="${t}"${sel?' checked':''}><span>${t}</span></label>`; }).join('')}
+          </div>
         </div>
         <div class="form-group"><label>Scheduled Date *</label><input type="date" name="date" required value="${existing ? existing.date : ''}"></div>
       </div>
@@ -2053,6 +2073,8 @@ function openSetNextServiceModal(custId, carId) {
 function submitSetNextService(custId, carId) {
   const form = document.getElementById('next-svc-form');
   if (!form.checkValidity()) { form.reportValidity(); return; }
+  const selectedTypes = [...form.querySelectorAll('input[name="type"]:checked')].map(cb => cb.value);
+  if (!selectedTypes.length) { toast('Please select at least one service type.', 'error'); return; }
   const db = getDB();
   // Remove existing for this car
   db.nextServices = db.nextServices.filter(ns => ns.carId !== form.carId.value);
@@ -2060,7 +2082,7 @@ function submitSetNextService(custId, carId) {
     id: 'ns_' + Date.now(),
     customerId: custId,
     carId: form.carId.value,
-    type: form.type.value,
+    type: selectedTypes.join(', '),
     date: form.date.value,
     notes: form.notes.value
   });
