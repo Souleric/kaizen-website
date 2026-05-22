@@ -506,6 +506,25 @@
     .svc-type-panel label:hover { background: var(--gray-50); }
     .svc-type-panel input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--blue-500); cursor: pointer; flex-shrink: 0; }
     .svc-type-panel label:has(input:checked) { background: var(--blue-50); color: var(--blue-700); font-weight: 500; }
+
+    /* ─── Job Sheet (screen) ─────────────────────────────────── */
+    .js-quick-fill {
+      background: var(--blue-50); border: 1px solid var(--blue-100);
+      border-radius: var(--radius); padding: 10px 16px;
+      display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap;
+    }
+    .js-quick-fill label { font-size: 13px; font-weight: 500; color: var(--blue-700); white-space: nowrap; }
+    .js-quick-fill select { flex: 1; min-width: 200px; max-width: 360px; padding: 8px 10px; border: 1px solid var(--blue-200); border-radius: var(--radius); font-size: 13px; background: var(--white); outline: none; }
+    .js-body { max-width: 860px; }
+    .js-form-section { margin-bottom: 22px; }
+    .js-form-section-title {
+      font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px;
+      color: var(--blue-700); border-bottom: 2px solid var(--blue-100);
+      padding-bottom: 6px; margin-bottom: 12px;
+    }
+    .js-svc-grid { display: flex; flex-wrap: wrap; gap: 8px 16px; padding: 10px; border: 1px solid var(--gray-300); border-radius: var(--radius); background: var(--gray-50); }
+    .js-svc-item { display: flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer; user-select: none; }
+    .js-svc-item input[type="checkbox"] { width: 14px; height: 14px; accent-color: var(--blue-500); cursor: pointer; }
   </style>
 </head>
 <body>
@@ -707,6 +726,7 @@ function getAdminNav() {
       { id: 'admin-dashboard', label: 'Dashboard', icon: iconGrid() },
       { id: 'admin-customers', label: 'Customers', icon: iconUsers() },
       { id: 'admin-calendar', label: 'Service Calendar', icon: iconCalendar() },
+      { id: 'admin-job-sheet', label: 'Job Sheet', icon: iconClipboard() },
     ]},
     { section: 'Settings', items: [
       { id: 'admin-all-services', label: 'All Services', icon: iconWrench() },
@@ -766,6 +786,7 @@ function renderView(view, state) {
     'cust-services': 'Service History',
     'cust-appointments': 'Book Appointment',
     'cust-next-service': 'Next Service',
+    'admin-job-sheet': 'Job Sheet',
   };
   document.getElementById('topbar-section').textContent = sectionTitles[view] || 'Portal';
 
@@ -777,6 +798,7 @@ function renderView(view, state) {
     case 'admin-all-services': main.innerHTML = viewAdminAllServices(); break;
     case 'admin-team': main.innerHTML = canManageTeam(currentUser.role) ? viewAdminTeam() : viewAdminDashboard(); break;
     case 'admin-settings': main.innerHTML = isAdminRole(currentUser.role) ? viewAdminSettings() : viewAdminDashboard(); break;
+    case 'admin-job-sheet': main.innerHTML = viewAdminJobSheet(); break;
     case 'cust-dashboard': main.innerHTML = viewCustDashboard(); break;
     case 'cust-vehicles': main.innerHTML = viewCustVehicles(); break;
     case 'cust-services': main.innerHTML = viewCustServices(); break;
@@ -2405,7 +2427,411 @@ function iconCalendar() { return `<svg width="16" height="16" viewBox="0 0 24 24
 function iconWrench() { return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>`; }
 function iconClock() { return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`; }
 function iconMoney() { return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>`; }
+function iconClipboard() { return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg>`; }
 function iconGear() { return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`; }
+
+// ═══════════════════════════════════════════════════════════ JOB SHEET
+
+function viewAdminJobSheet() {
+  const db = getDB();
+  const today = new Date().toISOString().split('T')[0];
+  const jobNo = 'JS-' + today.replace(/-/g,'') + '-' + String((db.jobSheetCount || 0) + 1).padStart(3,'0');
+
+  const custOptions = db.customers.map(c =>
+    `<option value="${c.id}">${c.name} — ${c.phone}</option>`
+  ).join('');
+
+  const svcCheckboxes = db.serviceTypes.map(t =>
+    `<label class="js-svc-item"><input type="checkbox" name="js-svc-type" value="${t}"> ${t}</label>`
+  ).join('');
+
+  return `
+    <div class="page-header">
+      <div class="page-title">Job Sheet / Borang Kerja</div>
+      <div class="page-subtitle">Fill in the details then print as A4 / Isi butiran kemudian cetak A4</div>
+    </div>
+
+    <div class="js-quick-fill">
+      <label>Quick-fill from existing customer:</label>
+      <select onchange="fillFromCustomer(this.value)">
+        <option value="">— Select customer to auto-fill —</option>
+        ${custOptions}
+      </select>
+    </div>
+
+    <div class="js-body">
+
+      <!-- Job Info -->
+      <div class="js-form-section">
+        <div class="js-form-section-title">Job Information / Maklumat Kerja</div>
+        <div class="form-row cols-3">
+          <div class="form-group">
+            <label>Job No.</label>
+            <input id="js-job-no" value="${jobNo}">
+          </div>
+          <div class="form-group">
+            <label>Date / Tarikh</label>
+            <input type="date" id="js-date" value="${today}">
+          </div>
+          <div class="form-group">
+            <label>Received By / Diterima Oleh</label>
+            <input id="js-received-by" value="${currentUser.displayName || currentUser.username}">
+          </div>
+        </div>
+      </div>
+
+      <!-- Customer Info -->
+      <div class="js-form-section">
+        <div class="js-form-section-title">Customer Information / Maklumat Pelanggan</div>
+        <div class="form-row cols-2">
+          <div class="form-group">
+            <label>Customer Name / Nama</label>
+            <input id="js-cust-name" placeholder="Full name">
+          </div>
+          <div class="form-group">
+            <label>Phone / Telefon</label>
+            <input id="js-cust-phone" placeholder="+60 1X-XXX XXXX">
+          </div>
+        </div>
+        <div class="form-row cols-2">
+          <div class="form-group">
+            <label>Email</label>
+            <input id="js-cust-email" placeholder="email@example.com">
+          </div>
+          <div class="form-group">
+            <label>IC / NRIC</label>
+            <input id="js-cust-ic" placeholder="XXXXXX-XX-XXXX">
+          </div>
+        </div>
+      </div>
+
+      <!-- Vehicle Info -->
+      <div class="js-form-section">
+        <div class="js-form-section-title">Vehicle Information / Maklumat Kenderaan</div>
+        <div class="form-row" style="grid-template-columns:1fr 0.6fr 1fr 1fr">
+          <div class="form-group">
+            <label>Plate No. / No. Plat</label>
+            <input id="js-plate" placeholder="WXY 1234">
+          </div>
+          <div class="form-group">
+            <label>Year / Tahun</label>
+            <input id="js-year" placeholder="2021">
+          </div>
+          <div class="form-group">
+            <label>Make / Jenama</label>
+            <input id="js-make" placeholder="Toyota">
+          </div>
+          <div class="form-group">
+            <label>Model</label>
+            <input id="js-model" placeholder="Camry">
+          </div>
+        </div>
+        <div class="form-row cols-3">
+          <div class="form-group">
+            <label>Colour / Warna</label>
+            <input id="js-colour" placeholder="Silver">
+          </div>
+          <div class="form-group">
+            <label>Mileage (km)</label>
+            <input id="js-mileage" placeholder="45,000">
+          </div>
+          <div class="form-group">
+            <label>VIN / Chassis No.</label>
+            <input id="js-vin" placeholder="WVGZZZ5N...">
+          </div>
+        </div>
+        <div class="form-row cols-2">
+          <div class="form-group">
+            <label>Engine No. / No. Enjin</label>
+            <input id="js-engine-no" placeholder="">
+          </div>
+        </div>
+      </div>
+
+      <!-- Service Details -->
+      <div class="js-form-section">
+        <div class="js-form-section-title">Service Details / Butiran Servis</div>
+        <div class="form-group">
+          <label>Service Type / Jenis Servis</label>
+          <div class="js-svc-grid">${svcCheckboxes}</div>
+        </div>
+        <div class="form-group" style="margin-top:12px;">
+          <label>Customer Complaint / Aduan Pelanggan</label>
+          <textarea id="js-complaint" rows="3" placeholder="Describe the issue reported by customer..."></textarea>
+        </div>
+        <div class="form-row cols-2" style="margin-top:4px;">
+          <div class="form-group">
+            <label>Estimated Cost / Anggaran Kos (RM)</label>
+            <input id="js-est-cost" placeholder="0.00">
+          </div>
+          <div class="form-group">
+            <label>Promised Completion Date / Tarikh Siap</label>
+            <input type="date" id="js-promised-date">
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div style="display:flex;justify-content:flex-end;gap:10px;padding-top:12px;border-top:1px solid var(--gray-200);">
+        <button class="btn btn-secondary" onclick="navigate('admin-job-sheet')">Clear Form</button>
+        <button class="btn btn-primary" onclick="collectAndPrint()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          Print Job Sheet / Cetak Borang
+        </button>
+      </div>
+
+    </div>
+  `;
+}
+
+function fillFromCustomer(customerId) {
+  if (!customerId) return;
+  const db = getDB();
+  const cust = db.customers.find(c => c.id === customerId);
+  if (!cust) return;
+  const el = id => document.getElementById(id);
+  if (el('js-cust-name'))  el('js-cust-name').value  = cust.name  || '';
+  if (el('js-cust-phone')) el('js-cust-phone').value = cust.phone || '';
+  if (el('js-cust-email')) el('js-cust-email').value = cust.email || '';
+  const car = db.cars.find(c => c.customerId === customerId);
+  if (car) {
+    if (el('js-plate'))  el('js-plate').value  = car.plateNumber || '';
+    if (el('js-year'))   el('js-year').value   = car.year        || '';
+    if (el('js-make'))   el('js-make').value   = car.make        || '';
+    if (el('js-model'))  el('js-model').value  = car.model       || '';
+    if (el('js-colour')) el('js-colour').value = car.color       || '';
+  }
+}
+
+function collectAndPrint() {
+  const val = id => (document.getElementById(id) || {}).value || '';
+  const db = getDB();
+  const selectedTypes = [...document.querySelectorAll('input[name="js-svc-type"]:checked')].map(cb => cb.value);
+  const data = {
+    jobNo:        val('js-job-no'),
+    date:         val('js-date'),
+    receivedBy:   val('js-received-by'),
+    customerName: val('js-cust-name'),
+    phone:        val('js-cust-phone'),
+    email:        val('js-cust-email'),
+    ic:           val('js-cust-ic'),
+    plateNo:      val('js-plate'),
+    year:         val('js-year'),
+    make:         val('js-make'),
+    model:        val('js-model'),
+    colour:       val('js-colour'),
+    mileage:      val('js-mileage'),
+    vin:          val('js-vin'),
+    engineNo:     val('js-engine-no'),
+    allServiceTypes: db.serviceTypes,
+    serviceTypes: selectedTypes,
+    complaint:    val('js-complaint'),
+    estCost:      val('js-est-cost'),
+    promisedDate: val('js-promised-date'),
+  };
+  const logoUrl = new URL('../public/logo.png', window.location.href).href;
+  const carImgUrl = new URL('../Assets/ChatGPT Image May 22, 2026, 04_31_18 PM.png', window.location.href).href;
+  const win = window.open('', '_blank', 'width=850,height=1100');
+  if (!win) { toast('Please allow popups to print the job sheet.', 'error'); return; }
+  win.document.write(jobSheetHTML(data, logoUrl, carImgUrl));
+  win.document.close();
+  win.focus();
+  setTimeout(function() { win.print(); }, 500);
+}
+
+function jobSheetHTML(d, logoUrl, carImgUrl) {
+  const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  const fmtDate = s => { if (!s) return ''; try { return new Date(s).toLocaleDateString('en-MY', {day:'numeric',month:'short',year:'numeric'}); } catch { return s; } };
+
+  const svcTypesHTML = (d.allServiceTypes || d.serviceTypes || []).map(t => {
+    const checked = d.serviceTypes.includes(t);
+    return `<span style="display:inline-flex;align-items:center;gap:3px;margin:0 10px 4px 0;font-size:8pt;white-space:nowrap;">
+      <span style="display:inline-block;width:10px;height:10px;border:1.2px solid #1e3a8a;border-radius:1px;background:${checked?'#1e3a8a':'#fff'};flex-shrink:0;"></span>${esc(t)}</span>`;
+  }).join('');
+
+  const checklists = [
+    { s: 'ENGINE / ENJIN', items: [['Engine Oil','Minyak Enjin'],['Oil Filter','Penapis Minyak'],['Engine Coolant','Cecair Penyejuk'],['Air Filter','Penapis Udara'],['Cabin Air Filter','Penapis Kabin'],['Battery','Bateri'],['Drive Belts','Tali Sawat'],['Spark Plugs','Palam Pencucuh']] },
+    { s: 'BRAKES / BREK', items: [['Front Brake Pads','Pad Brek Hadapan'],['Rear Brake Pads','Pad Brek Belakang'],['Front Rotors','Cakera Hadapan'],['Rear Rotors','Cakera Belakang'],['Brake Fluid','Cecair Brek'],['Handbrake','Brek Tangan']] },
+    { s: 'TYRES & WHEELS / TAYAR & RIM', items: [['Front Left Tyre','Tayar Hadapan Kiri'],['Front Right Tyre','Tayar Hadapan Kanan'],['Rear Left Tyre','Tayar Belakang Kiri'],['Rear Right Tyre','Tayar Belakang Kanan'],['Tyre Pressure','Tekanan Tayar'],['Wheel Alignment','Penjajaran Roda']] },
+    { s: 'LIGHTS / LAMPU', items: [['Headlights','Lampu Hadapan'],['Tail Lights','Lampu Belakang'],['Brake Lights','Lampu Brek'],['Indicators','Penunjuk Arah']] },
+    { s: 'FLUIDS / CECAIR', items: [['Power Steering','Stereng Kuasa'],['Transmission Fluid','Cecair Transmisi'],['Wiper Fluid','Cecair Wiper']] },
+    { s: 'OTHERS / LAIN-LAIN', items: [['Air Conditioning','Penghawa Dingin'],['Wipers','Wiper'],['Horn','Hon'],['Suspension','Suspensi'],['Exhaust','Ekzos']] },
+  ];
+
+  const renderChecklist = sections => `<table style="width:100%;border-collapse:collapse;font-size:7pt;">
+    <thead><tr>
+      <th style="text-align:left;padding:3px 5px;background:#eef2f8;border:1px solid #bbb;font-size:6.5pt;">Item</th>
+      <th style="padding:2px 3px;background:#eef2f8;border:1px solid #bbb;width:26px;text-align:center;font-size:6.5pt;line-height:1.1;">Good<br>Baik</th>
+      <th style="padding:2px 3px;background:#eef2f8;border:1px solid #bbb;width:32px;text-align:center;font-size:6.5pt;line-height:1.1;">Attn<br>Perhatian</th>
+      <th style="padding:2px 3px;background:#eef2f8;border:1px solid #bbb;width:30px;text-align:center;font-size:6.5pt;line-height:1.1;">Replace<br>Ganti</th>
+    </tr></thead>
+    <tbody>${sections.map(sec => `
+      <tr><td colspan="4" style="background:#dde5f0;font-weight:700;font-size:6.5pt;text-transform:uppercase;padding:2.5px 5px;border:1px solid #bbb;letter-spacing:0.2px;">${sec.s}</td></tr>
+      ${sec.items.map(([en,bm]) => `<tr>
+        <td style="padding:2.5px 5px;border:1px solid #ddd;">${en} <span style="color:#888;">/ ${bm}</span></td>
+        <td style="text-align:center;border:1px solid #ddd;">&#9633;</td>
+        <td style="text-align:center;border:1px solid #ddd;">&#9633;</td>
+        <td style="text-align:center;border:1px solid #ddd;">&#9633;</td>
+      </tr>`).join('')}
+    `).join('')}</tbody>
+  </table>`;
+
+  const carDiagram = `<img src="${esc(carImgUrl)}" alt="Vehicle diagram" style="width:100%;max-height:260px;object-fit:contain;display:block;">`;
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Job Sheet — ${esc(d.jobNo)}</title>
+<style>
+  @page { size: A4 portrait; margin: 10mm 12mm; }
+  *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:Arial,Helvetica,sans-serif; font-size:9pt; color:#111; background:#fff; }
+  .page { max-width:186mm; margin:0 auto; }
+  .hdr { display:flex; align-items:center; border-bottom:2.5px solid #1e3a8a; padding-bottom:8px; margin-bottom:7px; gap:12px; }
+  .hdr img { width:48px; height:48px; object-fit:contain; flex-shrink:0; }
+  .hdr-co h1 { font-size:14pt; font-weight:800; color:#1e3a8a; letter-spacing:-0.3px; }
+  .hdr-co p { font-size:7.5pt; color:#555; margin-top:1px; }
+  .hdr-title { margin-left:auto; text-align:right; }
+  .hdr-title h2 { font-size:11pt; font-weight:700; text-transform:uppercase; }
+  .hdr-title p { font-size:7.5pt; color:#555; margin-top:1px; }
+  .strip { display:flex; gap:8px; background:#f7f9fc; border:1px solid #ddd; border-radius:3px; padding:5px 8px; margin-bottom:6px; }
+  .sec { margin-bottom:6px; }
+  .sec-t { background:#1e3a8a; color:#fff; padding:2.5px 8px; font-size:7.5pt; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; margin-bottom:4px; }
+  .frow { display:flex; gap:8px; margin-bottom:4px; align-items:flex-end; }
+  .f { display:flex; flex-direction:column; flex:1; }
+  .f.f2 { flex:2; } .f.f3 { flex:3; }
+  .f lab { font-size:6.5pt; font-weight:700; color:#555; text-transform:uppercase; letter-spacing:0.2px; margin-bottom:1px; display:block; }
+  .f span { border-bottom:1px solid #333; min-height:14px; font-size:8.5pt; padding:1px 2px; display:block; }
+  .long-f { border:1px solid #ccc; min-height:26px; padding:2px 4px; font-size:8.5pt; margin-top:1px; }
+  .svc-wrap { display:flex; flex-wrap:wrap; gap:2px 8px; padding:4px 0 2px; }
+  .diag-sec { page-break-before:always; display:flex; flex-direction:column; min-height:255mm; }
+  .diag-row { display:flex; gap:16px; flex:1; }
+  .diag-svg { flex:0 0 280px; }
+  .diag-notes { flex:1; display:flex; flex-direction:column; }
+  .diag-lbl { font-size:7.5pt; font-weight:700; color:#333; text-transform:uppercase; margin-bottom:8px; line-height:1.6; }
+  .wl { border-bottom:1px solid #bbb; height:22px; }
+  .cl-cols { display:flex; gap:8px; }
+  .cl-col { flex:1; }
+  .rmk { border:1px solid #ccc; }
+  .rmk .wl { height:16px; border-bottom:1px solid #ddd; }
+  .rmk .wl:last-child { border-bottom:none; }
+  .sig-row { display:flex; gap:20px; margin-top:8px; padding-top:6px; border-top:1px dashed #ccc; }
+  .sig { flex:1; }
+  .sig-lbl { font-size:7.5pt; font-weight:700; color:#333; }
+  .sig-area { height:36px; border-bottom:1px solid #333; margin:5px 0 3px; }
+  .sig-sub { font-size:6.8pt; color:#666; }
+  @media print { body { -webkit-print-color-adjust:exact; print-color-adjust:exact; } }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="hdr">
+    <img src="${esc(logoUrl)}" alt="" onerror="this.style.display='none'">
+    <div class="hdr-co">
+      <h1>Kaizen Autocare</h1>
+      <p>Vehicle Service Centre / Pusat Servis Kenderaan</p>
+    </div>
+    <div class="hdr-title">
+      <h2>Vehicle Inspection &amp; Job Sheet</h2>
+      <p>Borang Pemeriksaan &amp; Kerja Kenderaan</p>
+    </div>
+  </div>
+
+  <div class="strip">
+    <div class="f"><lab>Job No.</lab><span>${esc(d.jobNo)}</span></div>
+    <div class="f"><lab>Date / Tarikh</lab><span>${fmtDate(d.date)}</span></div>
+    <div class="f f2"><lab>Received By / Diterima Oleh</lab><span>${esc(d.receivedBy)}</span></div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-t">Customer Information / Maklumat Pelanggan</div>
+    <div class="frow">
+      <div class="f f2"><lab>Name / Nama</lab><span>${esc(d.customerName)}</span></div>
+      <div class="f"><lab>Phone / Telefon</lab><span>${esc(d.phone)}</span></div>
+    </div>
+    <div class="frow">
+      <div class="f f2"><lab>Email</lab><span>${esc(d.email)}</span></div>
+      <div class="f"><lab>IC / NRIC</lab><span>${esc(d.ic)}</span></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-t">Vehicle Information / Maklumat Kenderaan</div>
+    <div class="frow">
+      <div class="f"><lab>Plate No. / No. Plat</lab><span>${esc(d.plateNo)}</span></div>
+      <div class="f"><lab>Year / Tahun</lab><span>${esc(d.year)}</span></div>
+      <div class="f"><lab>Make / Jenama</lab><span>${esc(d.make)}</span></div>
+      <div class="f"><lab>Model</lab><span>${esc(d.model)}</span></div>
+      <div class="f"><lab>Colour / Warna</lab><span>${esc(d.colour)}</span></div>
+    </div>
+    <div class="frow">
+      <div class="f"><lab>Mileage (km)</lab><span>${esc(d.mileage)}</span></div>
+      <div class="f f2"><lab>VIN / Chassis No.</lab><span>${esc(d.vin)}</span></div>
+      <div class="f"><lab>Engine No. / No. Enjin</lab><span>${esc(d.engineNo)}</span></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-t">Service / Perkhidmatan</div>
+    <div style="margin-bottom:3px;">
+      <div style="font-size:6.5pt;font-weight:700;color:#555;text-transform:uppercase;margin-bottom:2px;">Service Type / Jenis Servis</div>
+      <div class="svc-wrap">${svcTypesHTML}</div>
+    </div>
+    <div class="frow" style="margin-top:3px;">
+      <div class="f f3">
+        <lab>Customer Complaint / Aduan Pelanggan</lab>
+        <div class="long-f">${esc(d.complaint)}</div>
+      </div>
+    </div>
+    <div class="frow" style="margin-top:3px;">
+      <div class="f"><lab>Estimated Cost / Anggaran Kos</lab><span>RM ${esc(d.estCost)}</span></div>
+      <div class="f"><lab>Promised Date / Tarikh Siap</lab><span>${fmtDate(d.promisedDate)}</span></div>
+    </div>
+  </div>
+
+  <div class="sec diag-sec">
+    <div class="sec-t">Vehicle Diagram &amp; Inspection Notes / Rajah Kenderaan &amp; Nota</div>
+    <div class="diag-row">
+      <div class="diag-svg">${carDiagram}</div>
+      <div class="diag-notes">
+        <div class="diag-lbl">Mark damage areas on diagram.<br>Tanda kawasan kerosakan pada rajah.<br>Write notes below / Nota:</div>
+        ${Array(30).fill('<div class="wl"></div>').join('')}
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-t">Inspection Checklist / Senarai Pemeriksaan</div>
+    <div class="cl-cols">
+      <div class="cl-col">${renderChecklist(checklists.slice(0,3))}</div>
+      <div class="cl-col">${renderChecklist(checklists.slice(3))}</div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-t">Remarks / Catatan Tambahan</div>
+    <div class="rmk">${Array(4).fill('<div class="wl"></div>').join('')}</div>
+  </div>
+
+  <div class="sig-row">
+    <div class="sig">
+      <div class="sig-lbl">Customer Signature / Tandatangan Pelanggan</div>
+      <div class="sig-area"></div>
+      <div class="sig-sub">Name / Nama: _________________________________ &nbsp; Date / Tarikh: _______________</div>
+    </div>
+    <div class="sig">
+      <div class="sig-lbl">Mechanic / Advisor / Tandatangan Mekanik</div>
+      <div class="sig-area"></div>
+      <div class="sig-sub">Name / Nama: _________________________________ &nbsp; Date / Tarikh: _______________</div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>`;
+}
 
 // ═══════════════════════════════════════════════════════════ INIT
 document.addEventListener('DOMContentLoaded', () => {
