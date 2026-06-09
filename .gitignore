@@ -3,3 +3,10 @@ node_modules/
 *.mp4
 package-lock.json
 package.json
+
+# Browser-automation test artifacts
+.playwright-mcp/
+
+# Design source export + archived previous site (kept locally, not deployed)
+Website 1/
+_old-site/
