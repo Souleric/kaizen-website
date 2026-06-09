@@ -218,28 +218,25 @@ function QuickBook({ d }) {
   );
 }
 
-function FauxMap({ height }) {
+// Kaizen Autocare Sdn Bhd — 10, Jalan USJ 19/4a, USJ 19, 47630 Subang Jaya
+const KAIZEN_GEO = { lat: 3.0306045, lng: 101.5884401 };
+const MAP_EMBED = `https://www.google.com/maps?q=${KAIZEN_GEO.lat},${KAIZEN_GEO.lng}&z=16&hl=en&output=embed`;
+const MAP_PLACE = 'https://www.google.com/maps/place/Kaizen+Autocare+Sdn+Bhd/@3.0306045,101.5884401,17z/';
+const MAP_DIRECTIONS = `https://www.google.com/maps/dir/?api=1&destination=${KAIZEN_GEO.lat},${KAIZEN_GEO.lng}`;
+
+function LocationMap({ height }) {
   return (
     <div style={{ position: 'relative', height, borderRadius: 16, overflow: 'hidden', background: T.bg, border: `1px solid ${T.line}` }}>
-      <svg width="100%" height="100%" viewBox="0 0 360 280" preserveAspectRatio="none">
-        <rect width="360" height="280" fill="#EAE8E2"/>
-        {[...Array(14)].map((_, i) => <line key={i} x1="0" x2="360" y1={20 * i} y2={20 * i} stroke="#DBD8D0" strokeWidth="1"/>)}
-        {[...Array(15)].map((_, i) => <line key={i} y1="0" y2="280" x1={25 * i} x2={25 * i} stroke="#DBD8D0" strokeWidth="1"/>)}
-        <path d="M0 150 Q 90 130, 180 140 T 360 125" stroke="#C8C4BA" strokeWidth="5" fill="none"/>
-        <path d="M120 0 Q 130 90, 180 140 Q 240 190, 260 280" stroke="#C8C4BA" strokeWidth="4" fill="none"/>
-        <path d="M0 60 L 360 70" stroke="#D4D1C7" strokeWidth="2" fill="none"/>
-        <rect x="40" y="185" width="60" height="40" fill="#D7E4D0" rx="4"/>
-        <rect x="240" y="30" width="80" height="50" fill="#E1DBC8" rx="4"/>
-        <text x="58" y="210" fontFamily="Inter" fontSize="9" fill="#8a8a82">USJ 19 Park</text>
-        <text x="245" y="56" fontFamily="Inter" fontSize="9" fill="#8a8a82">Taipan</text>
-        <text x="186" y="158" fontFamily="Inter" fontSize="9" fill="#8a8a82" fontStyle="italic">Persiaran Kewajipan</text>
-      </svg>
-      <div style={{ position: 'absolute', left: '50%', top: '52%', transform: 'translate(-50%, -100%)' }}>
-        <div style={{ width: 38, height: 38, background: T.red, borderRadius: '50% 50% 50% 0', transform: 'rotate(-45deg)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 10px rgba(0,0,0,0.3)', border: '2.5px solid #fff' }}>
-          <div style={{ width: 10, height: 10, background: '#fff', borderRadius: '50%', transform: 'rotate(45deg)' }} />
-        </div>
-      </div>
-      <div style={{ position: 'absolute', top: 12, left: 12, background: '#fff', borderRadius: 999, padding: '6px 12px', fontFamily: FONT_UI, fontSize: 11, fontWeight: 600, color: T.ink, boxShadow: '0 2px 6px rgba(0,0,0,0.1)', display: 'flex', alignItems: 'center', gap: 6 }}>
+      <iframe
+        title="Kaizen Autocare USJ 19 location"
+        src={MAP_EMBED}
+        width="100%" height="100%"
+        style={{ border: 0, display: 'block' }}
+        loading="lazy"
+        referrerPolicy="no-referrer-when-downgrade"
+        allowFullScreen
+      />
+      <div style={{ position: 'absolute', top: 12, left: 12, background: '#fff', borderRadius: 999, padding: '6px 12px', fontFamily: FONT_UI, fontSize: 11, fontWeight: 600, color: T.ink, boxShadow: '0 2px 6px rgba(0,0,0,0.1)', display: 'flex', alignItems: 'center', gap: 6, pointerEvents: 'none' }}>
         <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#1f8a5b' }} /> Open now
       </div>
     </div>
@@ -303,7 +300,7 @@ function App() {
                 <div style={{ background: '#fff', border: `1px solid ${T.line}`, borderRadius: 18, padding: d ? 24 : 18 }}>
                   <div style={{ fontFamily: FONT_DISPLAY, fontSize: d ? 28 : 24, letterSpacing: 0.4, marginBottom: 4 }}>Kaizen Autocare USJ19</div>
                   <div style={{ borderTop: `1px solid ${T.line}`, marginTop: 12 }}>
-                    <ContactRow icon="pin" label="Address" value="Jalan USJ 19/1, USJ 19, 47600 Subang Jaya, Selangor" href="https://maps.google.com/?q=USJ+19+Subang+Jaya" />
+                    <ContactRow icon="pin" label="Address" value="10, Jalan USJ 19/4a, USJ 19, 47630 Subang Jaya, Selangor" href={MAP_PLACE} />
                     <div style={{ borderTop: `1px solid ${T.line}` }} />
                     <ContactRow icon="phone" label="Phone" value="03-1234 5678" href="tel:0312345678" />
                     <div style={{ borderTop: `1px solid ${T.line}` }} />
@@ -314,11 +311,11 @@ function App() {
                 </div>
 
                 <div style={{ marginTop: 16 }}>
-                  <FauxMap height={d ? 280 : 200} />
+                  <LocationMap height={d ? 280 : 200} />
                 </div>
 
                 <div style={{ display: 'flex', gap: 10, marginTop: 16 }}>
-                  <a href="https://maps.google.com/?q=USJ+19+Subang+Jaya" style={{ flex: 1, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: T.ink, color: '#fff', borderRadius: 999, padding: '14px', fontFamily: FONT_UI, fontSize: 14, fontWeight: 600 }}>
+                  <a href={MAP_DIRECTIONS} target="_blank" rel="noopener" style={{ flex: 1, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: T.ink, color: '#fff', borderRadius: 999, padding: '14px', fontFamily: FONT_UI, fontSize: 14, fontWeight: 600 }}>
                     <Icon name="pin" size={16} /> Get directions
                   </a>
                   <a href="https://wa.me/60123456789" style={{ flex: 1, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, background: '#25D366', color: '#fff', border: 'none', borderRadius: 999, padding: '14px', fontFamily: FONT_UI, fontSize: 14, fontWeight: 600 }}>
