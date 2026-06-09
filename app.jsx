@@ -102,8 +102,13 @@ const PACKAGES = [
 ];
 
 const STORES = [
-  { name: 'Kaizen Autocare USJ19', area: 'Subang Jaya · USJ19, Selangor', dist: 'Open now', rating: 4.9, slots: '8 slots today', addr: 'Jalan USJ 19/1, USJ 19, 47600 Subang Jaya' },
+  { name: 'Kaizen Autocare USJ19', area: 'Subang Jaya · USJ19, Selangor', dist: 'Open now', rating: 4.9, slots: '8 slots today', addr: '10, Jalan USJ 19/4a, USJ 19, 47630 Subang Jaya' },
 ];
+
+// Kaizen Autocare Sdn Bhd — real Google Maps location
+const KAIZEN_GEO = { lat: 3.0306045, lng: 101.5884401 };
+const MAP_EMBED = `https://www.google.com/maps?q=${KAIZEN_GEO.lat},${KAIZEN_GEO.lng}&z=16&hl=en&output=embed`;
+const MAP_DIRECTIONS = `https://www.google.com/maps/dir/?api=1&destination=${KAIZEN_GEO.lat},${KAIZEN_GEO.lng}`;
 
 const REVIEWS = [
   { name: 'Aiman R.', car: 'Honda City', text: 'Sent my car in for a knocking noise. They diagnosed a worn suspension arm same day and quoted before touching anything. No upsell nonsense.', rating: 5 },
@@ -642,49 +647,21 @@ function Stores() {
         position: 'relative', height: d ? 460 : 200, borderRadius: 16, overflow: 'hidden',
         background: T.bg, marginBottom: d ? 0 : 14, border: `1px solid ${T.line}`,
       }}>
-        <svg width="100%" height="100%" viewBox="0 0 360 200" preserveAspectRatio="none">
-          <rect width="360" height="200" fill="#EAE8E2"/>
-          {[...Array(10)].map((_, i) => (
-            <line key={i} x1="0" x2="360" y1={20 * i} y2={20 * i} stroke="#DBD8D0" strokeWidth="1"/>
-          ))}
-          {[...Array(15)].map((_, i) => (
-            <line key={i} y1="0" y2="200" x1={25 * i} x2={25 * i} stroke="#DBD8D0" strokeWidth="1"/>
-          ))}
-          {/* Persiaran Subang main road */}
-          <path d="M0 110 Q 90 95, 180 100 T 360 90" stroke="#C8C4BA" strokeWidth="5" fill="none"/>
-          <path d="M120 0 Q 130 70, 180 100 Q 240 130, 260 200" stroke="#C8C4BA" strokeWidth="4" fill="none"/>
-          <path d="M0 40 L 360 50" stroke="#D4D1C7" strokeWidth="2" fill="none"/>
-          {/* park / block fill */}
-          <rect x="40" y="130" width="60" height="40" fill="#D7E4D0" rx="4"/>
-          <rect x="240" y="20" width="80" height="50" fill="#E1DBC8" rx="4"/>
-          <text x="58" y="155" fontFamily="Inter" fontSize="9" fill="#8a8a82">USJ 19 Park</text>
-          <text x="245" y="46" fontFamily="Inter" fontSize="9" fill="#8a8a82">Taipan</text>
-          <text x="190" y="118" fontFamily="Inter" fontSize="9" fill="#8a8a82" fontStyle="italic">Persiaran Kewajipan</text>
-        </svg>
-        {/* pin */}
-        <div style={{
-          position: 'absolute', left: '50%', top: '52%',
-          transform: 'translate(-50%, -100%)',
-        }}>
-          <div style={{
-            width: 36, height: 36, background: T.red, borderRadius: '50% 50% 50% 0',
-            transform: 'rotate(-45deg)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: '0 4px 10px rgba(0,0,0,0.3)',
-            border: '2.5px solid #fff',
-          }}>
-            <div style={{
-              width: 10, height: 10, background: '#fff', borderRadius: '50%',
-              transform: 'rotate(45deg)',
-            }} />
-          </div>
-        </div>
+        <iframe
+          title="Kaizen Autocare USJ 19 location"
+          src={MAP_EMBED}
+          width="100%" height="100%"
+          style={{ border: 0, display: 'block' }}
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+          allowFullScreen
+        />
         <div style={{
           position: 'absolute', top: 12, left: 12,
           background: '#fff', borderRadius: 999, padding: '6px 12px',
           fontFamily: FONT_UI, fontSize: 11, fontWeight: 600, color: T.ink,
           boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
-          display: 'flex', alignItems: 'center', gap: 6,
+          display: 'flex', alignItems: 'center', gap: 6, pointerEvents: 'none',
         }}>
           <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#1f8a5b' }} />
           Open now
@@ -740,8 +717,8 @@ function Stores() {
       </div>
 
       <div style={{ display: 'flex', gap: 10 }}>
-        <Btn kind="dark" size="md" icon="arrow" style={{ flex: 1 }}>Get directions</Btn>
-        <Btn kind="ghost" size="md" icon="phone" style={{ flex: 1 }}>Call shop</Btn>
+        <Btn kind="dark" size="md" icon="arrow" style={{ flex: 1 }} onClick={() => window.open(MAP_DIRECTIONS, '_blank', 'noopener')}>Get directions</Btn>
+        <Btn kind="ghost" size="md" icon="phone" style={{ flex: 1 }} onClick={() => { window.location.href = 'tel:0312345678'; }}>Call shop</Btn>
       </div>
       </div>
       </div>
