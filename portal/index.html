@@ -2630,7 +2630,7 @@ function collectAndPrint() {
     promisedDate: val('js-promised-date'),
   };
   const logoUrl = new URL('../public/logo.png', window.location.href).href;
-  const carImgUrl = new URL('../Assets/ChatGPT Image May 22, 2026, 04_31_18 PM.png', window.location.href).href;
+  const carImgUrl = new URL('../assets/ChatGPT Image May 22, 2026, 04_31_18 PM.png', window.location.href).href;
   const win = window.open('', '_blank', 'width=850,height=1100');
   if (!win) { toast('Please allow popups to print the job sheet.', 'error'); return; }
   win.document.write(jobSheetHTML(data, logoUrl, carImgUrl));
